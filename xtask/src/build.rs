@@ -93,9 +93,9 @@ impl BuildConfig {
         }
         //不以zircon启动,就是以linux启动
         if !features.contains("zircon") {
-            // features.insert("linux".into()); 
+            features.insert("linux".into()); 
             //修改！如果没有zircon特性，就添加zircon特性！强制以zircon模式启动
-            features.insert("zircon".into()); 
+            // features.insert("zircon".into()); 
 
 
         }
@@ -307,7 +307,7 @@ impl GdbArgs {
             Arch::Aarch64 => {
                 Ext::new("gdb-multiarch") //修改了gdb版本！
                     .args(&["-ex", &format!("target remote localhost:{}", self.port),
-                            "-ex", "file /home/dzh/everything/daima/rust/zCore_aarch64_firmware/rayboot-2.0.0/src/bin/aarch64_uefi.rs"]) //修改！尝试调试efi！
+                            "-ex", "zCore_aarch64_firmware/rayboot-2.0.0/src/bin/aarch64_uefi.rs"]) //修改！尝试调试efi！
                     .invoke();
             }
             Arch::X86_64 => todo!(),

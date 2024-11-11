@@ -1,0 +1,28 @@
+/* This library is dual-licensed under the original license from
+ * RFC-4634 and WTFPL
+ *
+ * No direct code from the RFC is used, but this is a port to Rust
+ * of the code contained in the RFC (with some changes).
+ *
+ * Any mistakes are my own.
+ *
+ * All due credit and appreciation to the original authors
+ */
+
+Copyright (C) The Internet Society (2006)
+
+--------------------------------------------------------------------
+
+        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+                   Version 2, December 2004 
+
+Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
+
+Everyone is permitted to copy and distribute verbatim or modified 
+copies of this license document, and changing it is allowed as long 
+as the name is changed. 
+
+          DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+ TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+
+0. You just DO WHAT THE FUCK YOU WANT TO.

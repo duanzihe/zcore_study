@@ -34,7 +34,7 @@ impl super::LinuxRootfs {
 
             //修改！虽然个人认为rayboot这个制作efi的文件也应该在zcore项目里管理，但暂时还是先用本地目录来测试吧
             fs::copy(
-                "/home/dzh/everything/daima/rust/zCore_aarch64_firmware/rayboot-2.0.0/target/aarch64-unknown-uefi/release/aarch64_uefi.efi",
+                "./zCore_aarch64_firmware/rayboot-2.0.0/target/aarch64-unknown-uefi/release/aarch64_uefi.efi",
                 boot_dir.join("bootaa64.efi"),
             )
             .unwrap();

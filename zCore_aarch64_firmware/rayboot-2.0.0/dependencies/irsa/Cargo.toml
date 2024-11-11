@@ -1,0 +1,14 @@
+[package]
+name = "irsa"
+version = "0.1.0"
+authors = ["Nym Seddon <unseddd@shh.xyz>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+num = { version = "0.3", default-features = false, features = ["alloc", "num-bigint"] }
+rand = { version = "0.7", default-features = false }
+isha1 = { path = "../isha1" }
+isha256 = { path = "../isha256" }
+prime-math = { path = "../prime-math" }
