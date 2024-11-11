@@ -1,0 +1,4169 @@
+
+<html>
+<head>
+  <title>Cargo Build Timings — rayboot 2.0.0</title>
+  <meta charset="utf-8">
+<style type="text/css">
+:root {
+  --error-text: #e80000;
+  --text: #000;
+  --background: #fff;
+  --h1-border-bottom: #c0c0c0;
+  --table-box-shadow: rgba(0, 0, 0, 0.1);
+  --table-th: #d5dde5;
+  --table-th-background: #1b1e24;
+  --table-th-border-bottom: #9ea7af;
+  --table-th-border-right: #343a45;
+  --table-tr-border-top: #c1c3d1;
+  --table-tr-border-bottom: #c1c3d1;
+  --table-tr-odd-background: #ebebeb;
+  --table-td-background: #ffffff;
+  --table-td-border-right: #C1C3D1;
+  --canvas-background: #f7f7f7;
+  --canvas-axes: #303030;
+  --canvas-grid: #e6e6e6;
+  --canvas-block: #aa95e8;
+  --canvas-custom-build: #f0b165;
+  --canvas-not-custom-build: #95cce8;
+  --canvas-dep-line: #ddd;
+  --canvas-dep-line-highlighted: #000;
+  --canvas-cpu: rgba(250, 119, 0, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --error-text: #e80000;
+    --text: #fff;
+    --background: #121212;
+    --h1-border-bottom: #444;
+    --table-box-shadow: rgba(255, 255, 255, 0.1);
+    --table-th: #a0a0a0;
+    --table-th-background: #2c2c2c;
+    --table-th-border-bottom: #555;
+    --table-th-border-right: #444;
+    --table-tr-border-top: #333;
+    --table-tr-border-bottom: #333;
+    --table-tr-odd-background: #1e1e1e;
+    --table-td-background: #262626;
+    --table-td-border-right: #333;
+    --canvas-background: #1a1a1a;
+    --canvas-axes: #b0b0b0;
+    --canvas-grid: #333;
+    --canvas-block: #aa95e8;
+    --canvas-custom-build: #f0b165;
+    --canvas-not-custom-build: #95cce8;
+    --canvas-dep-line: #444;
+    --canvas-dep-line-highlighted: #fff;
+    --canvas-cpu: rgba(250, 119, 0, 0.2);
+  }
+}
+
+html {
+  font-family: sans-serif;
+  color: var(--text);
+  background: var(--background);
+}
+
+.canvas-container {
+  position: relative;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+h1 {
+  border-bottom: 1px solid var(--h1-border-bottom);
+}
+
+.graph {
+  display: block;
+}
+
+.my-table {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+  box-shadow: 0 5px 10px var(--table-box-shadow);
+}
+
+.my-table th {
+  color: var(--table-th);
+  background: var(--table-th-background);
+  border-bottom: 4px solid var(--table-th-border-bottom);
+  border-right: 1px solid var(--table-th-border-right);
+  font-size: 18px;
+  font-weight: 100;
+  padding: 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.my-table th:first-child {
+  border-top-left-radius: 3px;
+}
+
+.my-table th:last-child {
+  border-top-right-radius: 3px;
+  border-right:none;
+}
+
+.my-table tr {
+  border-top: 1px solid var(--table-tr-border-top);
+  border-bottom: 1px solid var(--table-tr-border-bottom);
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.my-table tr:first-child {
+  border-top:none;
+}
+
+.my-table tr:last-child {
+  border-bottom:none;
+}
+
+.my-table tr:nth-child(odd) td {
+  background: var(--table-tr-odd-background);
+}
+
+.my-table tr:last-child td:first-child {
+  border-bottom-left-radius:3px;
+}
+
+.my-table tr:last-child td:last-child {
+  border-bottom-right-radius:3px;
+}
+
+.my-table td {
+  background: var(--table-td-background);
+  padding: 10px;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 300;
+  font-size: 14px;
+  border-right: 1px solid var(--table-td-border-right);
+}
+
+.my-table td:last-child {
+  border-right: 0px;
+}
+
+.summary-table td:first-child {
+  vertical-align: top;
+  text-align: right;
+}
+
+.input-table td {
+  text-align: center;
+}
+
+.error-text {
+  color: var(--error-text);
+}
+
+</style>
+</head>
+<body>
+
+<h1>Cargo Build Timings</h1>
+See <a href="https://doc.rust-lang.org/nightly/cargo/reference/timings.html">Documentation</a>
+
+<table class="my-table summary-table">
+  <tr>
+    <td>Targets:</td><td>rayboot 2.0.0 (bin "aarch64_uefi")</td>
+  </tr>
+  <tr>
+    <td>Profile:</td><td>release</td>
+  </tr>
+  <tr>
+    <td>Fresh units:</td><td>0</td>
+  </tr>
+  <tr>
+    <td>Dirty units:</td><td>86</td>
+  </tr>
+  <tr>
+    <td>Total units:</td><td>86</td>
+  </tr>
+  <tr>
+    <td>Max concurrency:</td><td>16 (jobs=16 ncpu=16)</td>
+  </tr>
+  <tr>
+    <td>Build start:</td><td>2024-10-12T08:12:50Z</td>
+  </tr>
+  <tr>
+    <td>Total time:</td><td>9.5s</td>
+  </tr>
+  <tr>
+    <td>rustc:</td><td>rustc 1.83.0-nightly (3ae715c8c 2024-10-07)<br>Host: x86_64-unknown-linux-gnu<br>Target: aarch64-unknown-uefi</td>
+  </tr>
+
+</table>
+
+<table class="input-table">
+  <tr>
+    <td><label for="min-unit-time">Min unit time:</label></td>
+    <td><label for="scale">Scale:</label></td>
+  </tr>
+  <tr>
+    <td><input type="range" min="0" max="30" step="0.1" value="0" id="min-unit-time"></td>
+    <td><input type="range" min="1" max="50" value="20" id="scale"></td>
+  </tr>
+  <tr>
+    <td><output for="min-unit-time" id="min-unit-time-output"></output></td>
+    <td><output for="scale" id="scale-output"></output></td>
+  </tr>
+</table>
+
+<div id="pipeline-container" class="canvas-container">
+ <canvas id="pipeline-graph" class="graph" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+ <canvas id="pipeline-graph-lines" style="position: absolute; left: 0; top: 0; z-index: 1; pointer-events:none;"></canvas>
+</div>
+<div class="canvas-container">
+  <canvas id="timing-graph" class="graph"></canvas>
+</div>
+
+<table class="my-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Unit</th>
+      <th>Total</th>
+      <th>Codegen</th>
+      <th>Features</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<tr>
+  <td>1.</td>
+  <td>core v0.0.0</td>
+  <td>5.6s</td>
+  <td>0.5s (9%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>2.</td>
+  <td>serde v1.0.133</td>
+  <td>1.6s</td>
+  <td>0.1s (5%)</td>
+  <td>alloc, derive, serde_derive</td>
+</tr>
+
+<tr>
+  <td>3.</td>
+  <td>alloc v0.0.0</td>
+  <td>1.5s</td>
+  <td>0.4s (25%)</td>
+  <td>compiler-builtins-mem</td>
+</tr>
+
+<tr>
+  <td>4.</td>
+  <td>num-bigint v0.3.3</td>
+  <td>1.1s</td>
+  <td>0.4s (39%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>5.</td>
+  <td>syn v1.0.89</td>
+  <td>1.1s</td>
+  <td>0.2s (20%)</td>
+  <td>clone-impls, default, derive, full, parsing, printing, proc-macro, quote</td>
+</tr>
+
+<tr>
+  <td>6.</td>
+  <td>serde v1.0.133</td>
+  <td>1.0s</td>
+  <td>0.0s (3%)</td>
+  <td>default, derive, serde_derive, std</td>
+</tr>
+
+<tr>
+  <td>7.</td>
+  <td>num-rational v0.3.2</td>
+  <td>1.0s</td>
+  <td>0.8s (79%)</td>
+  <td>num-bigint</td>
+</tr>
+
+<tr>
+  <td>8.</td>
+  <td>serde_derive v1.0.133</td>
+  <td>1.0s</td>
+  <td></td>
+  <td>default</td>
+</tr>
+
+<tr>
+  <td>9.</td>
+  <td>compiler_builtins v0.1.133</td>
+  <td>0.8s</td>
+  <td>0.2s (31%)</td>
+  <td>compiler-builtins, core, default, mem, rustc-dep-of-std</td>
+</tr>
+
+<tr>
+  <td>10.</td>
+  <td>serde_json v1.0.81</td>
+  <td>0.7s</td>
+  <td>0.3s (39%)</td>
+  <td>alloc</td>
+</tr>
+
+<tr>
+  <td>11.</td>
+  <td>uefi v0.15.2</td>
+  <td>0.7s</td>
+  <td>0.2s (23%)</td>
+  <td>alloc, default, exts, logger</td>
+</tr>
+
+<tr>
+  <td>12.</td>
+  <td>cortex-a v7.2.0</td>
+  <td>0.6s</td>
+  <td>0.0s (5%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>13.</td>
+  <td>num-traits v0.2.14</td>
+  <td>0.5s</td>
+  <td>0.1s (19%)</td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>14.</td>
+  <td>prime-math v0.1.0</td>
+  <td>0.5s</td>
+  <td>0.5s (91%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>15.</td>
+  <td>irsa v0.1.0</td>
+  <td>0.5s</td>
+  <td>0.4s (74%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>16.</td>
+  <td>rand v0.7.3</td>
+  <td>0.5s</td>
+  <td>0.0s (9%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>17.</td>
+  <td>toml v0.5.8</td>
+  <td>0.5s</td>
+  <td>0.1s (18%)</td>
+  <td>default</td>
+</tr>
+
+<tr>
+  <td>18.</td>
+  <td>xmas-elf v0.7.0</td>
+  <td>0.4s</td>
+  <td>0.2s (35%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>19.</td>
+  <td>num-integer v0.1.44</td>
+  <td>0.4s</td>
+  <td>0.2s (54%)</td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>20.</td>
+  <td>font8x8 v0.2.7</td>
+  <td>0.3s</td>
+  <td>0.2s (51%)</td>
+  <td>unicode</td>
+</tr>
+
+<tr>
+  <td>21.</td>
+  <td>uefi-test-runner v0.2.0</td>
+  <td>0.3s</td>
+  <td>0.1s (41%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>22.</td>
+  <td>rayboot v2.0.0</td>
+  <td>0.3s</td>
+  <td>0.1s (23%)</td>
+  <td>acpi, arm64, binary, cortex-a, default, font8x8, irsa, lazy_static, llvm-tools-build, log, proc-macro2, quote, rsdp, serde, serde_json, spinning_top, tock-registers, toml, uefi, uefi-services, uefi-test-runner, uefi_bin, usize_conversions, virt, xmas-elf</td>
+</tr>
+
+<tr>
+  <td>23.</td>
+  <td>rayboot v2.0.0 bin "aarch64_uefi"</td>
+  <td>0.3s</td>
+  <td></td>
+  <td>acpi, arm64, binary, cortex-a, default, font8x8, irsa, lazy_static, llvm-tools-build, log, proc-macro2, quote, rsdp, serde, serde_json, spinning_top, tock-registers, toml, uefi, uefi-services, uefi-test-runner, uefi_bin, usize_conversions, virt, xmas-elf</td>
+</tr>
+
+<tr>
+  <td>24.</td>
+  <td>acpi v4.1.0</td>
+  <td>0.3s</td>
+  <td>0.1s (37%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>25.</td>
+  <td>num-complex v0.3.1</td>
+  <td>0.3s</td>
+  <td>0.1s (25%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>26.</td>
+  <td>ryu v1.0.10</td>
+  <td>0.3s</td>
+  <td>0.2s (69%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>27.</td>
+  <td>ppv-lite86 v0.2.16</td>
+  <td>0.2s</td>
+  <td>0.0s (9%)</td>
+  <td>simd</td>
+</tr>
+
+<tr>
+  <td>28.</td>
+  <td>proc-macro2 v1.0.36</td>
+  <td>0.2s</td>
+  <td>0.1s (24%)</td>
+  <td>default, proc-macro</td>
+</tr>
+
+<tr>
+  <td>29.</td>
+  <td>log v0.4.14</td>
+  <td>0.2s</td>
+  <td>0.1s (47%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>30.</td>
+  <td>lock_api v0.4.5</td>
+  <td>0.2s</td>
+  <td>0.0s (14%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>31.</td>
+  <td>isha1 v0.1.0</td>
+  <td>0.2s</td>
+  <td>0.1s (62%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>32.</td>
+  <td>autocfg v1.0.1</td>
+  <td>0.2s</td>
+  <td>0.0s (30%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>33.</td>
+  <td>compiler_builtins v0.1.133 build script</td>
+  <td>0.2s</td>
+  <td></td>
+  <td>compiler-builtins, core, default, mem, rustc-dep-of-std</td>
+</tr>
+
+<tr>
+  <td>34.</td>
+  <td>rayboot v2.0.0 build script</td>
+  <td>0.2s</td>
+  <td></td>
+  <td>acpi, arm64, binary, cortex-a, default, font8x8, irsa, lazy_static, llvm-tools-build, log, proc-macro2, quote, rsdp, serde, serde_json, spinning_top, tock-registers, toml, uefi, uefi-services, uefi-test-runner, uefi_bin, usize_conversions, virt, xmas-elf</td>
+</tr>
+
+<tr>
+  <td>35.</td>
+  <td>rand_chacha v0.2.2</td>
+  <td>0.1s</td>
+  <td>0.0s (15%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>36.</td>
+  <td>isha256 v0.1.0</td>
+  <td>0.1s</td>
+  <td>0.1s (55%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>37.</td>
+  <td>proc-macro2 v1.0.36 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>default, proc-macro</td>
+</tr>
+
+<tr>
+  <td>38.</td>
+  <td>rand_core v0.5.1</td>
+  <td>0.1s</td>
+  <td>0.0s (27%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>39.</td>
+  <td>quote v1.0.16</td>
+  <td>0.1s</td>
+  <td>0.0s (36%)</td>
+  <td>default, proc-macro</td>
+</tr>
+
+<tr>
+  <td>40.</td>
+  <td>uefi-macros v0.6.1</td>
+  <td>0.1s</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>41.</td>
+  <td>serde v1.0.133 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>alloc, derive, serde_derive</td>
+</tr>
+
+<tr>
+  <td>42.</td>
+  <td>ucs2 v0.3.2</td>
+  <td>0.1s</td>
+  <td>0.1s (59%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>43.</td>
+  <td>serde v1.0.133 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>default, derive, serde_derive, std</td>
+</tr>
+
+<tr>
+  <td>44.</td>
+  <td>itoa v1.0.2</td>
+  <td>0.1s</td>
+  <td>0.0s (24%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>45.</td>
+  <td>rsdp v2.0.0</td>
+  <td>0.1s</td>
+  <td>0.0s (46%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>46.</td>
+  <td>serde_derive v1.0.133 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>default</td>
+</tr>
+
+<tr>
+  <td>47.</td>
+  <td>llvm-tools v0.1.1</td>
+  <td>0.1s</td>
+  <td>0.0s (37%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>48.</td>
+  <td>bit_field v0.10.1</td>
+  <td>0.1s</td>
+  <td>0.0s (15%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>49.</td>
+  <td>rsdp v1.1.0</td>
+  <td>0.1s</td>
+  <td>0.1s (54%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>50.</td>
+  <td>tock-registers v0.7.0</td>
+  <td>0.1s</td>
+  <td>0.0s (13%)</td>
+  <td>register_types</td>
+</tr>
+
+<tr>
+  <td>51.</td>
+  <td>num-bigint v0.3.3 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>52.</td>
+  <td>syn v1.0.89 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>clone-impls, default, derive, full, parsing, printing, proc-macro, quote</td>
+</tr>
+
+<tr>
+  <td>53.</td>
+  <td>serde_json v1.0.81 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>alloc</td>
+</tr>
+
+<tr>
+  <td>54.</td>
+  <td>zero v0.1.2</td>
+  <td>0.1s</td>
+  <td>0.0s (48%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>55.</td>
+  <td>spin v0.5.2</td>
+  <td>0.1s</td>
+  <td>0.0s (22%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>56.</td>
+  <td>num-bigint v0.3.3 build script (run)</td>
+  <td>0.1s</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>57.</td>
+  <td>uefi-services v0.12.1</td>
+  <td>0.1s</td>
+  <td>0.0s (64%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>58.</td>
+  <td>log v0.4.14 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>59.</td>
+  <td>num-rational v0.3.2 build script (run)</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>num-bigint</td>
+</tr>
+
+<tr>
+  <td>60.</td>
+  <td>spinning_top v0.2.4</td>
+  <td>0.1s</td>
+  <td>0.0s (49%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>61.</td>
+  <td>num-traits v0.2.14 build script (run)</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>62.</td>
+  <td>num-traits v0.2.14 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>63.</td>
+  <td>num-integer v0.1.44 build script</td>
+  <td>0.1s</td>
+  <td></td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>64.</td>
+  <td>scopeguard v1.1.0</td>
+  <td>0.0s</td>
+  <td>0.0s (47%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>65.</td>
+  <td>num-rational v0.3.2 build script</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>num-bigint</td>
+</tr>
+
+<tr>
+  <td>66.</td>
+  <td>num-iter v0.1.42 build script</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>67.</td>
+  <td>lazy_static v1.4.0</td>
+  <td>0.0s</td>
+  <td>0.0s (37%)</td>
+  <td>spin, spin_no_std</td>
+</tr>
+
+<tr>
+  <td>68.</td>
+  <td>usize_conversions v0.2.0</td>
+  <td>0.0s</td>
+  <td>0.0s (34%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>69.</td>
+  <td>unicode-xid v0.2.2</td>
+  <td>0.0s</td>
+  <td>0.0s (23%)</td>
+  <td>default</td>
+</tr>
+
+<tr>
+  <td>70.</td>
+  <td>num-iter v0.1.42</td>
+  <td>0.0s</td>
+  <td>0.0s (22%)</td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>71.</td>
+  <td>qemu-exit v3.0.1</td>
+  <td>0.0s</td>
+  <td>0.0s (22%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>72.</td>
+  <td>bitflags v1.3.2</td>
+  <td>0.0s</td>
+  <td>0.0s (47%)</td>
+  <td>default</td>
+</tr>
+
+<tr>
+  <td>73.</td>
+  <td>num v0.3.1</td>
+  <td>0.0s</td>
+  <td>0.0s (33%)</td>
+  <td>alloc, num-bigint</td>
+</tr>
+
+<tr>
+  <td>74.</td>
+  <td>rustc-std-workspace-core v1.99.0</td>
+  <td>0.0s</td>
+  <td>0.0s (31%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>75.</td>
+  <td>cfg-if v1.0.0</td>
+  <td>0.0s</td>
+  <td>0.0s (44%)</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>76.</td>
+  <td>syn v1.0.89 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>clone-impls, default, derive, full, parsing, printing, proc-macro, quote</td>
+</tr>
+
+<tr>
+  <td>77.</td>
+  <td>serde v1.0.133 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>alloc, derive, serde_derive</td>
+</tr>
+
+<tr>
+  <td>78.</td>
+  <td>serde v1.0.133 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>default, derive, serde_derive, std</td>
+</tr>
+
+<tr>
+  <td>79.</td>
+  <td>serde_json v1.0.81 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>alloc</td>
+</tr>
+
+<tr>
+  <td>80.</td>
+  <td>serde_derive v1.0.133 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>default</td>
+</tr>
+
+<tr>
+  <td>81.</td>
+  <td>proc-macro2 v1.0.36 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>default, proc-macro</td>
+</tr>
+
+<tr>
+  <td>82.</td>
+  <td>num-iter v0.1.42 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>83.</td>
+  <td>num-integer v0.1.44 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>i128</td>
+</tr>
+
+<tr>
+  <td>84.</td>
+  <td>rayboot v2.0.0 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>acpi, arm64, binary, cortex-a, default, font8x8, irsa, lazy_static, llvm-tools-build, log, proc-macro2, quote, rsdp, serde, serde_json, spinning_top, tock-registers, toml, uefi, uefi-services, uefi-test-runner, uefi_bin, usize_conversions, virt, xmas-elf</td>
+</tr>
+
+<tr>
+  <td>85.</td>
+  <td>compiler_builtins v0.1.133 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td>compiler-builtins, core, default, mem, rustc-dep-of-std</td>
+</tr>
+
+<tr>
+  <td>86.</td>
+  <td>log v0.4.14 build script (run)</td>
+  <td>0.0s</td>
+  <td></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<script>
+DURATION = 10;
+const UNIT_DATA = [
+  {
+    "i": 0,
+    "name": "compiler_builtins",
+    "version": "0.1.133",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.09,
+    "duration": 0.16,
+    "rmeta_time": null,
+    "unlocked_units": [
+      17
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 1,
+    "name": "core",
+    "version": "0.0.0",
+    "mode": "todo",
+    "target": "",
+    "start": 0.1,
+    "duration": 5.55,
+    "rmeta_time": 5.06,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      39
+    ]
+  },
+  {
+    "i": 2,
+    "name": "autocfg",
+    "version": "1.0.1",
+    "mode": "todo",
+    "target": "",
+    "start": 0.1,
+    "duration": 0.16,
+    "rmeta_time": 0.11,
+    "unlocked_units": [
+      23,
+      25,
+      21,
+      22,
+      24
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 3,
+    "name": "proc-macro2",
+    "version": "1.0.36",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.1,
+    "duration": 0.12,
+    "rmeta_time": null,
+    "unlocked_units": [
+      15
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 4,
+    "name": "log",
+    "version": "0.4.14",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.1,
+    "duration": 0.07,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 5,
+    "name": "serde_derive",
+    "version": "1.0.133",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.1,
+    "duration": 0.1,
+    "rmeta_time": null,
+    "unlocked_units": [
+      13
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 6,
+    "name": "syn",
+    "version": "1.0.89",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.1,
+    "duration": 0.09,
+    "rmeta_time": null,
+    "unlocked_units": [
+      12
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 7,
+    "name": "serde",
+    "version": "1.0.133",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.1,
+    "duration": 0.11,
+    "rmeta_time": null,
+    "unlocked_units": [
+      14
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 8,
+    "name": "unicode-xid",
+    "version": "0.2.2",
+    "mode": "todo",
+    "target": "",
+    "start": 0.1,
+    "duration": 0.04,
+    "rmeta_time": 0.03,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 9,
+    "name": "serde",
+    "version": "1.0.133",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.1,
+    "duration": 0.12,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 10,
+    "name": "serde_json",
+    "version": "1.0.81",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.1,
+    "duration": 0.09,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 11,
+    "name": "llvm-tools",
+    "version": "0.1.1",
+    "mode": "todo",
+    "target": "",
+    "start": 0.1,
+    "duration": 0.1,
+    "rmeta_time": 0.06,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 12,
+    "name": "syn",
+    "version": "1.0.89",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.19,
+    "duration": 0.01,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 13,
+    "name": "serde_derive",
+    "version": "1.0.133",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.2,
+    "duration": 0.01,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 14,
+    "name": "serde",
+    "version": "1.0.133",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.21,
+    "duration": 0.01,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 15,
+    "name": "proc-macro2",
+    "version": "1.0.36",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.22,
+    "duration": 0.01,
+    "rmeta_time": null,
+    "unlocked_units": [
+      16
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 16,
+    "name": "proc-macro2",
+    "version": "1.0.36",
+    "mode": "todo",
+    "target": "",
+    "start": 0.23,
+    "duration": 0.23,
+    "rmeta_time": 0.17,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      31
+    ]
+  },
+  {
+    "i": 17,
+    "name": "compiler_builtins",
+    "version": "0.1.133",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.25,
+    "duration": 0.0,
+    "rmeta_time": null,
+    "unlocked_units": [
+      20,
+      18,
+      19
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 18,
+    "name": "log",
+    "version": "0.4.14",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.26,
+    "duration": 0.0,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 19,
+    "name": "serde",
+    "version": "1.0.133",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.26,
+    "duration": 0.01,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 20,
+    "name": "serde_json",
+    "version": "1.0.81",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.26,
+    "duration": 0.01,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 21,
+    "name": "num-traits",
+    "version": "0.2.14",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.26,
+    "duration": 0.05,
+    "rmeta_time": null,
+    "unlocked_units": [
+      29
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 22,
+    "name": "num-integer",
+    "version": "0.1.44",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.26,
+    "duration": 0.05,
+    "rmeta_time": null,
+    "unlocked_units": [
+      28
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 23,
+    "name": "num-bigint",
+    "version": "0.3.3",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.26,
+    "duration": 0.09,
+    "rmeta_time": null,
+    "unlocked_units": [
+      30
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 24,
+    "name": "num-rational",
+    "version": "0.3.2",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.26,
+    "duration": 0.05,
+    "rmeta_time": null,
+    "unlocked_units": [
+      27
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 25,
+    "name": "num-iter",
+    "version": "0.1.42",
+    "mode": "todo",
+    "target": " build script",
+    "start": 0.26,
+    "duration": 0.05,
+    "rmeta_time": null,
+    "unlocked_units": [
+      26
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 26,
+    "name": "num-iter",
+    "version": "0.1.42",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.31,
+    "duration": 0.0,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 27,
+    "name": "num-rational",
+    "version": "0.3.2",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.31,
+    "duration": 0.06,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 28,
+    "name": "num-integer",
+    "version": "0.1.44",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.31,
+    "duration": 0.0,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 29,
+    "name": "num-traits",
+    "version": "0.2.14",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.31,
+    "duration": 0.05,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 30,
+    "name": "num-bigint",
+    "version": "0.3.3",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 0.35,
+    "duration": 0.08,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 31,
+    "name": "quote",
+    "version": "1.0.16",
+    "mode": "todo",
+    "target": "",
+    "start": 0.4,
+    "duration": 0.12,
+    "rmeta_time": 0.08,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      32
+    ]
+  },
+  {
+    "i": 32,
+    "name": "syn",
+    "version": "1.0.89",
+    "mode": "todo",
+    "target": "",
+    "start": 0.48,
+    "duration": 1.13,
+    "rmeta_time": 0.9,
+    "unlocked_units": [
+      33,
+      34
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 33,
+    "name": "serde_derive",
+    "version": "1.0.133",
+    "mode": "todo",
+    "target": "",
+    "start": 1.61,
+    "duration": 0.95,
+    "rmeta_time": null,
+    "unlocked_units": [
+      35
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 34,
+    "name": "uefi-macros",
+    "version": "0.6.1",
+    "mode": "todo",
+    "target": "",
+    "start": 1.61,
+    "duration": 0.12,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 35,
+    "name": "serde",
+    "version": "1.0.133",
+    "mode": "todo",
+    "target": "",
+    "start": 2.56,
+    "duration": 1.04,
+    "rmeta_time": 1.01,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      36
+    ]
+  },
+  {
+    "i": 36,
+    "name": "toml",
+    "version": "0.5.8",
+    "mode": "todo",
+    "target": "",
+    "start": 3.57,
+    "duration": 0.45,
+    "rmeta_time": 0.37,
+    "unlocked_units": [
+      37
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 37,
+    "name": "rayboot",
+    "version": "2.0.0",
+    "mode": "todo",
+    "target": " build script",
+    "start": 4.02,
+    "duration": 0.15,
+    "rmeta_time": null,
+    "unlocked_units": [
+      38
+    ],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 38,
+    "name": "rayboot",
+    "version": "2.0.0",
+    "mode": "run-custom-build",
+    "target": " build script (run)",
+    "start": 4.18,
+    "duration": 0.0,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 39,
+    "name": "rustc-std-workspace-core",
+    "version": "1.99.0",
+    "mode": "todo",
+    "target": "",
+    "start": 5.16,
+    "duration": 0.02,
+    "rmeta_time": 0.02,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      40
+    ]
+  },
+  {
+    "i": 40,
+    "name": "compiler_builtins",
+    "version": "0.1.133",
+    "mode": "todo",
+    "target": "",
+    "start": 5.17,
+    "duration": 0.76,
+    "rmeta_time": 0.53,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      41
+    ]
+  },
+  {
+    "i": 41,
+    "name": "alloc",
+    "version": "0.0.0",
+    "mode": "todo",
+    "target": "",
+    "start": 5.7,
+    "duration": 1.53,
+    "rmeta_time": 1.14,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      45,
+      55,
+      52,
+      53,
+      47,
+      44,
+      50,
+      64,
+      65,
+      58,
+      46,
+      42,
+      49,
+      56,
+      43,
+      48,
+      51,
+      54
+    ]
+  },
+  {
+    "i": 42,
+    "name": "bit_field",
+    "version": "0.10.1",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.1,
+    "rmeta_time": 0.09,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      61
+    ]
+  },
+  {
+    "i": 43,
+    "name": "cfg-if",
+    "version": "1.0.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.02,
+    "rmeta_time": 0.01,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      57
+    ]
+  },
+  {
+    "i": 44,
+    "name": "num-traits",
+    "version": "0.2.14",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.55,
+    "rmeta_time": 0.44,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      73,
+      74
+    ]
+  },
+  {
+    "i": 45,
+    "name": "scopeguard",
+    "version": "1.1.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.05,
+    "rmeta_time": 0.03,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      59
+    ]
+  },
+  {
+    "i": 46,
+    "name": "isha1",
+    "version": "0.1.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.17,
+    "rmeta_time": 0.07,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 47,
+    "name": "rand_core",
+    "version": "0.5.1",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.12,
+    "rmeta_time": 0.09,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 48,
+    "name": "bitflags",
+    "version": "1.3.2",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.02,
+    "rmeta_time": 0.01,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 49,
+    "name": "serde",
+    "version": "1.0.133",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 1.62,
+    "rmeta_time": 1.53,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      80
+    ]
+  },
+  {
+    "i": 50,
+    "name": "tock-registers",
+    "version": "0.7.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.09,
+    "rmeta_time": 0.08,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      62
+    ]
+  },
+  {
+    "i": 51,
+    "name": "ppv-lite86",
+    "version": "0.2.16",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.23,
+    "rmeta_time": 0.21,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      70
+    ]
+  },
+  {
+    "i": 52,
+    "name": "isha256",
+    "version": "0.1.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.13,
+    "rmeta_time": 0.06,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 53,
+    "name": "itoa",
+    "version": "1.0.2",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.11,
+    "rmeta_time": 0.08,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 54,
+    "name": "qemu-exit",
+    "version": "3.0.1",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.03,
+    "rmeta_time": 0.02,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 55,
+    "name": "zero",
+    "version": "0.1.2",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.09,
+    "rmeta_time": 0.04,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      60
+    ]
+  },
+  {
+    "i": 56,
+    "name": "spin",
+    "version": "0.5.2",
+    "mode": "todo",
+    "target": "",
+    "start": 6.85,
+    "duration": 0.08,
+    "rmeta_time": 0.07,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      63
+    ]
+  },
+  {
+    "i": 57,
+    "name": "log",
+    "version": "0.4.14",
+    "mode": "todo",
+    "target": "",
+    "start": 6.87,
+    "duration": 0.22,
+    "rmeta_time": 0.12,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      67,
+      66,
+      68
+    ]
+  },
+  {
+    "i": 58,
+    "name": "ryu",
+    "version": "1.0.10",
+    "mode": "todo",
+    "target": "",
+    "start": 6.88,
+    "duration": 0.28,
+    "rmeta_time": 0.09,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 59,
+    "name": "lock_api",
+    "version": "0.4.5",
+    "mode": "todo",
+    "target": "",
+    "start": 6.88,
+    "duration": 0.18,
+    "rmeta_time": 0.15,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      69
+    ]
+  },
+  {
+    "i": 60,
+    "name": "xmas-elf",
+    "version": "0.7.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.9,
+    "duration": 0.43,
+    "rmeta_time": 0.28,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 61,
+    "name": "ucs2",
+    "version": "0.3.2",
+    "mode": "todo",
+    "target": "",
+    "start": 6.94,
+    "duration": 0.11,
+    "rmeta_time": 0.05,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 62,
+    "name": "cortex-a",
+    "version": "7.2.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.94,
+    "duration": 0.58,
+    "rmeta_time": 0.55,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 63,
+    "name": "lazy_static",
+    "version": "1.4.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.95,
+    "duration": 0.05,
+    "rmeta_time": 0.03,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 64,
+    "name": "font8x8",
+    "version": "0.2.7",
+    "mode": "todo",
+    "target": "",
+    "start": 6.95,
+    "duration": 0.32,
+    "rmeta_time": 0.16,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 65,
+    "name": "usize_conversions",
+    "version": "0.2.0",
+    "mode": "todo",
+    "target": "",
+    "start": 6.97,
+    "duration": 0.05,
+    "rmeta_time": 0.03,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 66,
+    "name": "uefi",
+    "version": "0.15.2",
+    "mode": "todo",
+    "target": "",
+    "start": 6.99,
+    "duration": 0.71,
+    "rmeta_time": 0.54,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      77
+    ]
+  },
+  {
+    "i": 67,
+    "name": "rsdp",
+    "version": "2.0.0",
+    "mode": "todo",
+    "target": "",
+    "start": 7.01,
+    "duration": 0.1,
+    "rmeta_time": 0.05,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      71
+    ]
+  },
+  {
+    "i": 68,
+    "name": "rsdp",
+    "version": "1.1.0",
+    "mode": "todo",
+    "target": "",
+    "start": 7.01,
+    "duration": 0.1,
+    "rmeta_time": 0.04,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 69,
+    "name": "spinning_top",
+    "version": "0.2.4",
+    "mode": "todo",
+    "target": "",
+    "start": 7.04,
+    "duration": 0.06,
+    "rmeta_time": 0.03,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 70,
+    "name": "rand_chacha",
+    "version": "0.2.2",
+    "mode": "todo",
+    "target": "",
+    "start": 7.09,
+    "duration": 0.14,
+    "rmeta_time": 0.12,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      72
+    ]
+  },
+  {
+    "i": 71,
+    "name": "acpi",
+    "version": "4.1.0",
+    "mode": "todo",
+    "target": "",
+    "start": 7.09,
+    "duration": 0.3,
+    "rmeta_time": 0.19,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 72,
+    "name": "rand",
+    "version": "0.7.3",
+    "mode": "todo",
+    "target": "",
+    "start": 7.21,
+    "duration": 0.47,
+    "rmeta_time": 0.43,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 73,
+    "name": "num-integer",
+    "version": "0.1.44",
+    "mode": "todo",
+    "target": "",
+    "start": 7.29,
+    "duration": 0.43,
+    "rmeta_time": 0.2,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      75,
+      76
+    ]
+  },
+  {
+    "i": 74,
+    "name": "num-complex",
+    "version": "0.3.1",
+    "mode": "todo",
+    "target": "",
+    "start": 7.29,
+    "duration": 0.29,
+    "rmeta_time": 0.22,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 75,
+    "name": "num-iter",
+    "version": "0.1.42",
+    "mode": "todo",
+    "target": "",
+    "start": 7.49,
+    "duration": 0.04,
+    "rmeta_time": 0.03,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 76,
+    "name": "num-bigint",
+    "version": "0.3.3",
+    "mode": "todo",
+    "target": "",
+    "start": 7.49,
+    "duration": 1.14,
+    "rmeta_time": 0.7,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      79
+    ]
+  },
+  {
+    "i": 77,
+    "name": "uefi-services",
+    "version": "0.12.1",
+    "mode": "todo",
+    "target": "",
+    "start": 7.53,
+    "duration": 0.07,
+    "rmeta_time": 0.03,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      78
+    ]
+  },
+  {
+    "i": 78,
+    "name": "uefi-test-runner",
+    "version": "0.2.0",
+    "mode": "todo",
+    "target": "",
+    "start": 7.56,
+    "duration": 0.31,
+    "rmeta_time": 0.18,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 79,
+    "name": "num-rational",
+    "version": "0.3.2",
+    "mode": "todo",
+    "target": "",
+    "start": 8.19,
+    "duration": 0.99,
+    "rmeta_time": 0.21,
+    "unlocked_units": [
+      85
+    ],
+    "unlocked_rmeta_units": [
+      81
+    ]
+  },
+  {
+    "i": 80,
+    "name": "serde_json",
+    "version": "1.0.81",
+    "mode": "todo",
+    "target": "",
+    "start": 8.38,
+    "duration": 0.72,
+    "rmeta_time": 0.43,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      84
+    ]
+  },
+  {
+    "i": 81,
+    "name": "num",
+    "version": "0.3.1",
+    "mode": "todo",
+    "target": "",
+    "start": 8.4,
+    "duration": 0.02,
+    "rmeta_time": 0.02,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      82
+    ]
+  },
+  {
+    "i": 82,
+    "name": "prime-math",
+    "version": "0.1.0",
+    "mode": "todo",
+    "target": "",
+    "start": 8.41,
+    "duration": 0.54,
+    "rmeta_time": 0.05,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": [
+      83
+    ]
+  },
+  {
+    "i": 83,
+    "name": "irsa",
+    "version": "0.1.0",
+    "mode": "todo",
+    "target": "",
+    "start": 8.47,
+    "duration": 0.52,
+    "rmeta_time": 0.14,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 84,
+    "name": "rayboot",
+    "version": "2.0.0",
+    "mode": "todo",
+    "target": "",
+    "start": 8.81,
+    "duration": 0.31,
+    "rmeta_time": 0.24,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  },
+  {
+    "i": 85,
+    "name": "rayboot",
+    "version": "2.0.0",
+    "mode": "todo",
+    "target": " bin \"aarch64_uefi\"",
+    "start": 9.17,
+    "duration": 0.3,
+    "rmeta_time": null,
+    "unlocked_units": [],
+    "unlocked_rmeta_units": []
+  }
+];
+const CONCURRENCY_DATA = [
+  {
+    "t": 0.093154532,
+    "active": 1,
+    "waiting": 11,
+    "inactive": 74
+  },
+  {
+    "t": 0.093240539,
+    "active": 1,
+    "waiting": 11,
+    "inactive": 74
+  },
+  {
+    "t": 0.099979055,
+    "active": 12,
+    "waiting": 0,
+    "inactive": 74
+  },
+  {
+    "t": 0.133064427,
+    "active": 12,
+    "waiting": 0,
+    "inactive": 74
+  },
+  {
+    "t": 0.143186256,
+    "active": 11,
+    "waiting": 0,
+    "inactive": 74
+  },
+  {
+    "t": 0.16361661,
+    "active": 11,
+    "waiting": 0,
+    "inactive": 74
+  },
+  {
+    "t": 0.168364257,
+    "active": 10,
+    "waiting": 0,
+    "inactive": 74
+  },
+  {
+    "t": 0.188999453,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 73
+  },
+  {
+    "t": 0.189118978,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 73
+  },
+  {
+    "t": 0.200720877,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 72
+  },
+  {
+    "t": 0.200760959,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 72
+  },
+  {
+    "t": 0.20348441,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 72
+  },
+  {
+    "t": 0.210324224,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 72
+  },
+  {
+    "t": 0.211375897,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 72
+  },
+  {
+    "t": 0.211957291,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 71
+  },
+  {
+    "t": 0.211996427,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 71
+  },
+  {
+    "t": 0.215032108,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 71
+  },
+  {
+    "t": 0.221281466,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 70
+  },
+  {
+    "t": 0.221312005,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 70
+  },
+  {
+    "t": 0.221339497,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 70
+  },
+  {
+    "t": 0.224833536,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 70
+  },
+  {
+    "t": 0.231020855,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 69
+  },
+  {
+    "t": 0.231043237,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 69
+  },
+  {
+    "t": 0.231055397,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 69
+  },
+  {
+    "t": 0.25308778,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 68
+  },
+  {
+    "t": 0.253113219,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 68
+  },
+  {
+    "t": 0.253157469,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 68
+  },
+  {
+    "t": 0.25520642,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 65
+  },
+  {
+    "t": 0.255253806,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 65
+  },
+  {
+    "t": 0.25527665,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 65
+  },
+  {
+    "t": 0.257002933,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 65
+  },
+  {
+    "t": 0.259725754,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 60
+  },
+  {
+    "t": 0.259759414,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 60
+  },
+  {
+    "t": 0.259772838,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 60
+  },
+  {
+    "t": 0.259817472,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 60
+  },
+  {
+    "t": 0.26762209,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 60
+  },
+  {
+    "t": 0.268545272,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 60
+  },
+  {
+    "t": 0.307782033,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 58
+  },
+  {
+    "t": 0.307912031,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 58
+  },
+  {
+    "t": 0.310094268,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 58
+  },
+  {
+    "t": 0.31077922,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 57
+  },
+  {
+    "t": 0.310841864,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 57
+  },
+  {
+    "t": 0.311812041,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 56
+  },
+  {
+    "t": 0.31185126,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 56
+  },
+  {
+    "t": 0.312857117,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 56
+  },
+  {
+    "t": 0.351711373,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 55
+  },
+  {
+    "t": 0.351774014,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 55
+  },
+  {
+    "t": 0.364719839,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 55
+  },
+  {
+    "t": 0.365109395,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 55
+  },
+  {
+    "t": 0.404322131,
+    "active": 3,
+    "waiting": 1,
+    "inactive": 54
+  },
+  {
+    "t": 0.404397547,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 54
+  },
+  {
+    "t": 0.404519702,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 54
+  },
+  {
+    "t": 0.42843256,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 54
+  },
+  {
+    "t": 0.45809061,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 54
+  },
+  {
+    "t": 0.482096532,
+    "active": 2,
+    "waiting": 1,
+    "inactive": 53
+  },
+  {
+    "t": 0.482154993,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 53
+  },
+  {
+    "t": 0.482221991,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 53
+  },
+  {
+    "t": 0.525801382,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 53
+  },
+  {
+    "t": 1.026023301,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 53
+  },
+  {
+    "t": 1.382138739,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 53
+  },
+  {
+    "t": 1.6085958580000002,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 51
+  },
+  {
+    "t": 1.608695212,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 51
+  },
+  {
+    "t": 1.728630475,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 51
+  },
+  {
+    "t": 2.228928296,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 51
+  },
+  {
+    "t": 2.559267954,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 50
+  },
+  {
+    "t": 2.5593881720000002,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 50
+  },
+  {
+    "t": 3.059501228,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 50
+  },
+  {
+    "t": 3.559732119,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 50
+  },
+  {
+    "t": 3.570104407,
+    "active": 2,
+    "waiting": 1,
+    "inactive": 49
+  },
+  {
+    "t": 3.570206866,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 49
+  },
+  {
+    "t": 3.570319946,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 49
+  },
+  {
+    "t": 3.599992873,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 49
+  },
+  {
+    "t": 3.942483744,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 49
+  },
+  {
+    "t": 4.022116413,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 48
+  },
+  {
+    "t": 4.02218979,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 48
+  },
+  {
+    "t": 4.175691266,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 47
+  },
+  {
+    "t": 4.175803914,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 47
+  },
+  {
+    "t": 4.177783712,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 47
+  },
+  {
+    "t": 4.677867745,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 47
+  },
+  {
+    "t": 5.15598763,
+    "active": 1,
+    "waiting": 1,
+    "inactive": 46
+  },
+  {
+    "t": 5.156139834,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 46
+  },
+  {
+    "t": 5.156295545,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 46
+  },
+  {
+    "t": 5.171448942,
+    "active": 2,
+    "waiting": 1,
+    "inactive": 45
+  },
+  {
+    "t": 5.171555998,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 45
+  },
+  {
+    "t": 5.171721589,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 45
+  },
+  {
+    "t": 5.17809753,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 45
+  },
+  {
+    "t": 5.64719608,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 45
+  },
+  {
+    "t": 5.701540706,
+    "active": 1,
+    "waiting": 1,
+    "inactive": 44
+  },
+  {
+    "t": 5.701613299,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 44
+  },
+  {
+    "t": 5.701731749,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 44
+  },
+  {
+    "t": 5.934957381,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 44
+  },
+  {
+    "t": 6.435178167,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 44
+  },
+  {
+    "t": 6.851586716,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 26
+  },
+  {
+    "t": 6.861714574,
+    "active": 16,
+    "waiting": 4,
+    "inactive": 25
+  },
+  {
+    "t": 6.863799428,
+    "active": 16,
+    "waiting": 4,
+    "inactive": 25
+  },
+  {
+    "t": 6.871348542,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 25
+  },
+  {
+    "t": 6.871445114,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 25
+  },
+  {
+    "t": 6.8754909269999995,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 25
+  },
+  {
+    "t": 6.875576023,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 25
+  },
+  {
+    "t": 6.87656381,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 24
+  },
+  {
+    "t": 6.882490183,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 24
+  },
+  {
+    "t": 6.88259285,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 24
+  },
+  {
+    "t": 6.89532974,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 23
+  },
+  {
+    "t": 6.899954427,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 23
+  },
+  {
+    "t": 6.900029434,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 23
+  },
+  {
+    "t": 6.910022441,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 23
+  },
+  {
+    "t": 6.917348529,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 22
+  },
+  {
+    "t": 6.933269328,
+    "active": 16,
+    "waiting": 4,
+    "inactive": 21
+  },
+  {
+    "t": 6.935205314,
+    "active": 16,
+    "waiting": 5,
+    "inactive": 20
+  },
+  {
+    "t": 6.935278911,
+    "active": 16,
+    "waiting": 5,
+    "inactive": 20
+  },
+  {
+    "t": 6.936458109,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 20
+  },
+  {
+    "t": 6.936509586,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 20
+  },
+  {
+    "t": 6.936528854,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 20
+  },
+  {
+    "t": 6.940384447,
+    "active": 16,
+    "waiting": 3,
+    "inactive": 20
+  },
+  {
+    "t": 6.94542034,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 20
+  },
+  {
+    "t": 6.945499751,
+    "active": 16,
+    "waiting": 2,
+    "inactive": 20
+  },
+  {
+    "t": 6.950157348,
+    "active": 16,
+    "waiting": 1,
+    "inactive": 20
+  },
+  {
+    "t": 6.952316609,
+    "active": 16,
+    "waiting": 1,
+    "inactive": 20
+  },
+  {
+    "t": 6.961392784,
+    "active": 16,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.965459589,
+    "active": 16,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.973953787,
+    "active": 16,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.97411414,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.974536803,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.974691367,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.983310134,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.983706882,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.984004664,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 20
+  },
+  {
+    "t": 6.987463122,
+    "active": 14,
+    "waiting": 3,
+    "inactive": 17
+  },
+  {
+    "t": 6.99087435,
+    "active": 14,
+    "waiting": 2,
+    "inactive": 17
+  },
+  {
+    "t": 6.991019512,
+    "active": 14,
+    "waiting": 2,
+    "inactive": 17
+  },
+  {
+    "t": 6.994797036,
+    "active": 14,
+    "waiting": 2,
+    "inactive": 17
+  },
+  {
+    "t": 7.008441946,
+    "active": 15,
+    "waiting": 1,
+    "inactive": 17
+  },
+  {
+    "t": 7.009653552,
+    "active": 15,
+    "waiting": 1,
+    "inactive": 17
+  },
+  {
+    "t": 7.010346212,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.014277169,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.023887031,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029551926,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029632644,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029653407,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029663623,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029673795,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029714627,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029726282,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.029734073,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 17
+  },
+  {
+    "t": 7.034812728,
+    "active": 14,
+    "waiting": 1,
+    "inactive": 16
+  },
+  {
+    "t": 7.035258067,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 16
+  },
+  {
+    "t": 7.035388302,
+    "active": 15,
+    "waiting": 0,
+    "inactive": 16
+  },
+  {
+    "t": 7.050858965,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 16
+  },
+  {
+    "t": 7.058234721,
+    "active": 14,
+    "waiting": 0,
+    "inactive": 16
+  },
+  {
+    "t": 7.059147819,
+    "active": 13,
+    "waiting": 0,
+    "inactive": 16
+  },
+  {
+    "t": 7.064011362,
+    "active": 13,
+    "waiting": 1,
+    "inactive": 15
+  },
+  {
+    "t": 7.064537977,
+    "active": 13,
+    "waiting": 1,
+    "inactive": 15
+  },
+  {
+    "t": 7.065115469,
+    "active": 13,
+    "waiting": 2,
+    "inactive": 14
+  },
+  {
+    "t": 7.085416168,
+    "active": 13,
+    "waiting": 1,
+    "inactive": 14
+  },
+  {
+    "t": 7.085575699,
+    "active": 13,
+    "waiting": 1,
+    "inactive": 14
+  },
+  {
+    "t": 7.092267859,
+    "active": 12,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.09355317,
+    "active": 12,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.109654848,
+    "active": 11,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.109774922,
+    "active": 11,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.111027154,
+    "active": 10,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.111375122,
+    "active": 10,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.152844517,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.178644439,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 14
+  },
+  {
+    "t": 7.205598934,
+    "active": 9,
+    "waiting": 1,
+    "inactive": 13
+  },
+  {
+    "t": 7.205700747,
+    "active": 10,
+    "waiting": 0,
+    "inactive": 13
+  },
+  {
+    "t": 7.205780497,
+    "active": 10,
+    "waiting": 0,
+    "inactive": 13
+  },
+  {
+    "t": 7.227477789,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 13
+  },
+  {
+    "t": 7.233319088,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 13
+  },
+  {
+    "t": 7.276687382,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 13
+  },
+  {
+    "t": 7.282318096,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 13
+  },
+  {
+    "t": 7.292665686,
+    "active": 7,
+    "waiting": 2,
+    "inactive": 11
+  },
+  {
+    "t": 7.292781694,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 11
+  },
+  {
+    "t": 7.292798309,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 11
+  },
+  {
+    "t": 7.292845505,
+    "active": 9,
+    "waiting": 0,
+    "inactive": 11
+  },
+  {
+    "t": 7.330405487,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 11
+  },
+  {
+    "t": 7.3916609730000005,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 11
+  },
+  {
+    "t": 7.3955699280000005,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 11
+  },
+  {
+    "t": 7.485714091,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 11
+  },
+  {
+    "t": 7.4897873409999995,
+    "active": 6,
+    "waiting": 2,
+    "inactive": 9
+  },
+  {
+    "t": 7.489887584,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 9
+  },
+  {
+    "t": 7.489972648,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 9
+  },
+  {
+    "t": 7.489979607,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 9
+  },
+  {
+    "t": 7.510168566,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 9
+  },
+  {
+    "t": 7.512030417,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 9
+  },
+  {
+    "t": 7.518293965,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 9
+  },
+  {
+    "t": 7.52606022,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 9
+  },
+  {
+    "t": 7.532914337,
+    "active": 6,
+    "waiting": 1,
+    "inactive": 8
+  },
+  {
+    "t": 7.532987101,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 8
+  },
+  {
+    "t": 7.533079429,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 8
+  },
+  {
+    "t": 7.560211739,
+    "active": 7,
+    "waiting": 1,
+    "inactive": 7
+  },
+  {
+    "t": 7.560366061,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.5604472640000004,
+    "active": 8,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.581762296,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.593547472,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.593618002,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.598426965,
+    "active": 7,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.607777667,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.636584485,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.679532705,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.698916439,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.710128449,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.723102495,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.743072822,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 7.871653062,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 7
+  },
+  {
+    "t": 8.188178162,
+    "active": 2,
+    "waiting": 1,
+    "inactive": 6
+  },
+  {
+    "t": 8.188312179,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 6
+  },
+  {
+    "t": 8.188453611,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 6
+  },
+  {
+    "t": 8.378389687,
+    "active": 3,
+    "waiting": 1,
+    "inactive": 5
+  },
+  {
+    "t": 8.378556086,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 5
+  },
+  {
+    "t": 8.378630656,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 5
+  },
+  {
+    "t": 8.397624827,
+    "active": 4,
+    "waiting": 1,
+    "inactive": 4
+  },
+  {
+    "t": 8.397730681,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 4
+  },
+  {
+    "t": 8.397818327,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 4
+  },
+  {
+    "t": 8.413870464,
+    "active": 5,
+    "waiting": 1,
+    "inactive": 3
+  },
+  {
+    "t": 8.413994447,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 3
+  },
+  {
+    "t": 8.414074797,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 3
+  },
+  {
+    "t": 8.421635146,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 3
+  },
+  {
+    "t": 8.464802875,
+    "active": 5,
+    "waiting": 1,
+    "inactive": 2
+  },
+  {
+    "t": 8.464901254,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 2
+  },
+  {
+    "t": 8.465010057,
+    "active": 6,
+    "waiting": 0,
+    "inactive": 2
+  },
+  {
+    "t": 8.466014683,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 2
+  },
+  {
+    "t": 8.60002027,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 2
+  },
+  {
+    "t": 8.631304042,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 2
+  },
+  {
+    "t": 8.812915047,
+    "active": 4,
+    "waiting": 1,
+    "inactive": 1
+  },
+  {
+    "t": 8.813072772,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 8.813143918,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 8.848254215,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 8.866122752,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 8.866291993,
+    "active": 5,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 8.953414662,
+    "active": 4,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 8.988376326000001,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 9.001785976,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 9.001833547,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 9.001885518,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 9.049804235,
+    "active": 3,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 9.094749466,
+    "active": 2,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 9.120830996,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 1
+  },
+  {
+    "t": 9.173620976,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 0
+  },
+  {
+    "t": 9.173712312,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 0
+  },
+  {
+    "t": 9.207371768,
+    "active": 1,
+    "waiting": 0,
+    "inactive": 0
+  },
+  {
+    "t": 9.472254162,
+    "active": 0,
+    "waiting": 0,
+    "inactive": 0
+  }
+];
+const CPU_USAGE = [
+  [
+    0.188999539,
+    77.9874213836478
+  ],
+  [
+    0.307782461,
+    57.219251336898395
+  ],
+  [
+    0.428432649,
+    33.33333333333334
+  ],
+  [
+    1.026023649,
+    17.83840503672613
+  ],
+  [
+    1.382138804,
+    19.400352733686063
+  ],
+  [
+    1.608596084,
+    44.32132963988919
+  ],
+  [
+    1.728630651,
+    23.03664921465969
+  ],
+  [
+    2.228928788,
+    13.659147869674186
+  ],
+  [
+    2.5592733880000003,
+    26.56546489563567
+  ],
+  [
+    3.059503229,
+    13.459119496855337
+  ],
+  [
+    3.559732598,
+    13.19095477386935
+  ],
+  [
+    3.942484431,
+    15.875613747954176
+  ],
+  [
+    4.175692222,
+    25.268817204301072
+  ],
+  [
+    4.6778680569999995,
+    7.2681704260651685
+  ],
+  [
+    5.15598786,
+    7.095926412614986
+  ],
+  [
+    5.647196244,
+    49.232736572890026
+  ],
+  [
+    5.934958203,
+    50.326797385620914
+  ],
+  [
+    6.435178731,
+    8.270676691729335
+  ],
+  [
+    6.851590655,
+    7.424242424242422
+  ],
+  [
+    6.952320499,
+    96.29629629629629
+  ],
+  [
+    7.058234982,
+    98.22485207100591
+  ],
+  [
+    7.178644719,
+    87.36842105263158
+  ],
+  [
+    7.282318338,
+    72.12121212121212
+  ],
+  [
+    7.391661138,
+    61.84971098265896
+  ],
+  [
+    7.510169522,
+    42.553191489361694
+  ],
+  [
+    7.6365848629999995,
+    72.27722772277227
+  ],
+  [
+    7.74307302,
+    50.0
+  ],
+  [
+    7.871653224,
+    45.36585365853658
+  ],
+  [
+    8.188178328,
+    14.115308151093444
+  ],
+  [
+    8.378390557,
+    54.42622950819672
+  ],
+  [
+    8.600020424,
+    57.67045454545455
+  ],
+  [
+    8.812915461,
+    49.408284023668635
+  ],
+  [
+    8.953414834,
+    74.66666666666666
+  ],
+  [
+    9.094749672,
+    50.892857142857146
+  ],
+  [
+    9.207372702,
+    10.614525139664806
+  ]
+];
+// Position of the vertical axis.
+const X_LINE = 50;
+// General-use margin size.
+const MARGIN = 5;
+// Position of the horizontal axis, relative to the bottom.
+const Y_LINE = 35;
+// Minimum distance between time tick labels.
+const MIN_TICK_DIST = 50;
+// Radius for rounded rectangle corners.
+const RADIUS = 3;
+// Height of unit boxes.
+const BOX_HEIGHT = 25;
+// Distance between Y tick marks on the unit graph.
+const Y_TICK_DIST = BOX_HEIGHT + 2;
+// Rects used for mouseover detection.
+// Objects of {x, y, x2, y2, i} where `i` is the index into UNIT_DATA.
+let HIT_BOXES = [];
+// Index into UNIT_DATA of the last unit hovered over by mouse.
+let LAST_HOVER = null;
+// Key is unit index, value is {x, y, width, rmeta_x} of the box.
+let UNIT_COORDS = {};
+// Map of unit index to the index it was unlocked by.
+let REVERSE_UNIT_DEPS = {};
+let REVERSE_UNIT_RMETA_DEPS = {};
+
+// Colors from css
+const getCssColor = name => getComputedStyle(document.body).getPropertyValue(name);
+const TEXT_COLOR = getCssColor('--text');
+const BG_COLOR = getCssColor('--background');
+const CANVAS_BG = getCssColor('--canvas-background');
+const AXES_COLOR = getCssColor('--canvas-axes');
+const GRID_COLOR = getCssColor('--canvas-grid');
+const BLOCK_COLOR = getCssColor('--canvas-block');
+const CUSTOM_BUILD_COLOR = getCssColor('--canvas-custom-build');
+const NOT_CUSTOM_BUILD_COLOR = getCssColor('--canvas-not-custom-build');
+const DEP_LINE_COLOR = getCssColor('--canvas-dep-line');
+const DEP_LINE_HIGHLIGHTED_COLOR = getCssColor('--canvas-dep-line-highlighted');
+const CPU_COLOR = getCssColor('--canvas-cpu');
+
+for (let n=0; n<UNIT_DATA.length; n++) {
+  let unit = UNIT_DATA[n];
+  for (let unlocked of unit.unlocked_units) {
+    REVERSE_UNIT_DEPS[unlocked] = n;
+  }
+  for (let unlocked of unit.unlocked_rmeta_units) {
+    REVERSE_UNIT_RMETA_DEPS[unlocked] = n;
+  }
+}
+
+function render_pipeline_graph() {
+  if (UNIT_DATA.length == 0) {
+    return;
+  }
+  let g = document.getElementById('pipeline-graph');
+  HIT_BOXES.length = 0;
+  g.onmousemove = pipeline_mousemove;
+  const min_time = document.getElementById('min-unit-time').valueAsNumber;
+
+  const units = UNIT_DATA.filter(unit => unit.duration >= min_time);
+
+  const graph_height = Y_TICK_DIST * units.length;
+  const {ctx, graph_width, canvas_width, canvas_height, px_per_sec} = draw_graph_axes('pipeline-graph', graph_height);
+  const container = document.getElementById('pipeline-container');
+  container.style.width = canvas_width;
+  container.style.height = canvas_height;
+
+  // Canvas for hover highlights. This is a separate layer to improve performance.
+  const linectx = setup_canvas('pipeline-graph-lines', canvas_width, canvas_height);
+  linectx.clearRect(0, 0, canvas_width, canvas_height);
+  ctx.strokeStyle = AXES_COLOR;
+  // Draw Y tick marks.
+  for (let n=1; n<units.length; n++) {
+    const y = MARGIN + Y_TICK_DIST * n;
+    ctx.beginPath();
+    ctx.moveTo(X_LINE, y);
+    ctx.lineTo(X_LINE-5, y);
+    ctx.stroke();
+  }
+
+  // Draw Y labels.
+  ctx.textAlign = 'end';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = AXES_COLOR;
+  for (let n=0; n<units.length; n++) {
+    let y = MARGIN + Y_TICK_DIST * n + Y_TICK_DIST / 2;
+    ctx.fillText(n+1, X_LINE-4, y);
+  }
+
+  // Draw the graph.
+  ctx.save();
+  ctx.translate(X_LINE, MARGIN);
+
+  // Compute x,y coordinate of each block.
+  // We also populate a map with the count of each unit name to disambiguate if necessary
+  const unitCount = new Map();
+  UNIT_COORDS = {};
+  for (i=0; i<units.length; i++) {
+    let unit = units[i];
+    let y = i * Y_TICK_DIST + 1;
+    let x = px_per_sec * unit.start;
+    let rmeta_x = null;
+    if (unit.rmeta_time != null) {
+      rmeta_x = x + px_per_sec * unit.rmeta_time;
+    }
+    let width = Math.max(px_per_sec * unit.duration, 1.0);
+    UNIT_COORDS[unit.i] = {x, y, width, rmeta_x};
+
+    const count = unitCount.get(unit.name) || 0;
+    unitCount.set(unit.name, count + 1);
+  }
+
+  // Draw the blocks.
+  for (i=0; i<units.length; i++) {
+    let unit = units[i];
+    let {x, y, width, rmeta_x} = UNIT_COORDS[unit.i];
+
+    HIT_BOXES.push({x: X_LINE+x, y:MARGIN+y, x2: X_LINE+x+width, y2: MARGIN+y+BOX_HEIGHT, i: unit.i});
+
+    ctx.beginPath();
+    ctx.fillStyle = unit.mode == 'run-custom-build' ? CUSTOM_BUILD_COLOR : NOT_CUSTOM_BUILD_COLOR;
+    roundedRect(ctx, x, y, width, BOX_HEIGHT, RADIUS);
+    ctx.fill();
+
+    if (unit.rmeta_time != null) {
+      ctx.beginPath();
+      ctx.fillStyle = BLOCK_COLOR;
+      let ctime = unit.duration - unit.rmeta_time;
+      roundedRect(ctx, rmeta_x, y, px_per_sec * ctime, BOX_HEIGHT, RADIUS);
+      ctx.fill();
+    }
+    ctx.fillStyle = TEXT_COLOR;
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'middle';
+    ctx.font = '14px sans-serif';
+
+    const labelName = (unitCount.get(unit.name) || 0) > 1 ? `${unit.name} (v${unit.version})${unit.target}` : `${unit.name}${unit.target}`;
+    const label = `${labelName}: ${unit.duration}s`;
+
+    const text_info = ctx.measureText(label);
+    const label_x = Math.min(x + 5.0, canvas_width - text_info.width - X_LINE);
+    ctx.fillText(label, label_x, y + BOX_HEIGHT / 2);
+    draw_dep_lines(ctx, unit.i, false);
+  }
+  ctx.restore();
+}
+
+// Draws lines from the given unit to the units it unlocks.
+function draw_dep_lines(ctx, unit_idx, highlighted) {
+  const unit = UNIT_DATA[unit_idx];
+  const {x, y, rmeta_x} = UNIT_COORDS[unit_idx];
+  ctx.save();
+  for (const unlocked of unit.unlocked_units) {
+    draw_one_dep_line(ctx, x, y, unlocked, highlighted);
+  }
+  for (const unlocked of unit.unlocked_rmeta_units) {
+    draw_one_dep_line(ctx, rmeta_x, y, unlocked, highlighted);
+  }
+  ctx.restore();
+}
+
+function draw_one_dep_line(ctx, from_x, from_y, to_unit, highlighted) {
+  if (to_unit in UNIT_COORDS) {
+    let {x: u_x, y: u_y} = UNIT_COORDS[to_unit];
+    ctx.strokeStyle = highlighted ? DEP_LINE_HIGHLIGHTED_COLOR: DEP_LINE_COLOR;
+    ctx.setLineDash([2]);
+    ctx.beginPath();
+    ctx.moveTo(from_x, from_y+BOX_HEIGHT/2);
+    ctx.lineTo(from_x-5, from_y+BOX_HEIGHT/2);
+    ctx.lineTo(from_x-5, u_y+BOX_HEIGHT/2);
+    ctx.lineTo(u_x, u_y+BOX_HEIGHT/2);
+    ctx.stroke();
+  }
+}
+
+function render_timing_graph() {
+  if (CONCURRENCY_DATA.length == 0) {
+    return;
+  }
+  const HEIGHT = 400;
+  const AXIS_HEIGHT = HEIGHT - MARGIN - Y_LINE;
+  const TOP_MARGIN = 10;
+  const GRAPH_HEIGHT = AXIS_HEIGHT - TOP_MARGIN;
+
+  const {canvas_width, graph_width, ctx} = draw_graph_axes('timing-graph', AXIS_HEIGHT);
+
+  // Draw Y tick marks and labels.
+  let max_v = 0;
+  for (c of CONCURRENCY_DATA) {
+    max_v = Math.max(max_v, c.active, c.waiting, c.inactive);
+  }
+  const px_per_v = GRAPH_HEIGHT / max_v;
+  const {step, tick_dist, num_ticks} = split_ticks(max_v, px_per_v, GRAPH_HEIGHT);
+  ctx.textAlign = 'end';
+  for (n=0; n<num_ticks; n++) {
+    let y = HEIGHT - Y_LINE - ((n + 1) * tick_dist);
+    ctx.beginPath();
+    ctx.moveTo(X_LINE, y);
+    ctx.lineTo(X_LINE-5, y);
+    ctx.stroke();
+    ctx.fillText((n+1) * step, X_LINE-10, y+5);
+  }
+
+  // Label the Y axis.
+  let label_y = (HEIGHT - Y_LINE) / 2;
+  ctx.save();
+  ctx.translate(15, label_y);
+  ctx.rotate(3*Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText('# Units', 0, 0);
+  ctx.restore();
+
+  // Draw the graph.
+  ctx.save();
+  ctx.translate(X_LINE, MARGIN);
+
+  function coord(t, v) {
+    return {
+      x: graph_width * (t/DURATION),
+      y: TOP_MARGIN + GRAPH_HEIGHT * (1.0 - (v / max_v))
+    };
+  }
+
+  const cpuFillStyle = CPU_COLOR;
+  if (CPU_USAGE.length > 1) {
+    ctx.beginPath();
+    ctx.fillStyle = cpuFillStyle;
+    let bottomLeft = coord(CPU_USAGE[0][0], 0);
+    ctx.moveTo(bottomLeft.x, bottomLeft.y);
+    for (let i=0; i < CPU_USAGE.length; i++) {
+      let [time, usage] = CPU_USAGE[i];
+      let {x, y} = coord(time, usage / 100.0 * max_v);
+      ctx.lineTo(x, y);
+    }
+    let bottomRight = coord(CPU_USAGE[CPU_USAGE.length - 1][0], 0);
+    ctx.lineTo(bottomRight.x, bottomRight.y);
+    ctx.fill();
+  }
+
+  function draw_line(style, key) {
+    let first = CONCURRENCY_DATA[0];
+    let last = coord(first.t, key(first));
+    ctx.strokeStyle = style;
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    for (let i=1; i<CONCURRENCY_DATA.length; i++) {
+      let c = CONCURRENCY_DATA[i];
+      let {x, y} = coord(c.t, key(c));
+      ctx.lineTo(x, last.y);
+      ctx.lineTo(x, y);
+      last = {x, y};
+    }
+    ctx.stroke();
+  }
+
+  draw_line('blue', function(c) {return c.inactive;});
+  draw_line('red', function(c) {return c.waiting;});
+  draw_line('green', function(c) {return c.active;});
+
+  // Draw a legend.
+  ctx.restore();
+  ctx.save();
+  ctx.translate(canvas_width-200, MARGIN);
+  // background
+  ctx.fillStyle = BG_COLOR;
+  ctx.strokeStyle = TEXT_COLOR;
+  ctx.lineWidth = 1;
+  ctx.textBaseline = 'middle'
+  ctx.textAlign = 'start';
+  ctx.beginPath();
+  ctx.rect(0, 0, 150, 82);
+  ctx.stroke();
+  ctx.fill();
+
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.beginPath();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'red';
+  ctx.moveTo(5, 10);
+  ctx.lineTo(50, 10);
+  ctx.stroke();
+  ctx.fillText('Waiting', 54, 11);
+
+  ctx.beginPath();
+  ctx.strokeStyle = 'blue';
+  ctx.moveTo(5, 30);
+  ctx.lineTo(50, 30);
+  ctx.stroke();
+  ctx.fillText('Inactive', 54, 31);
+
+  ctx.beginPath();
+  ctx.strokeStyle = 'green';
+  ctx.moveTo(5, 50);
+  ctx.lineTo(50, 50);
+  ctx.stroke();
+  ctx.fillText('Active', 54, 51);
+
+  ctx.beginPath();
+  ctx.fillStyle = cpuFillStyle
+  ctx.fillRect(15, 60, 30, 15);
+  ctx.fill();
+  ctx.fillStyle = TEXT_COLOR;
+  ctx.fillText('CPU Usage', 54, 71);
+
+  ctx.restore();
+}
+
+function setup_canvas(id, width, height) {
+  let g = document.getElementById(id);
+  let dpr = window.devicePixelRatio || 1;
+  g.width = width * dpr;
+  g.height = height * dpr;
+  g.style.width = width;
+  g.style.height = height;
+  let ctx = g.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return ctx;
+}
+
+function draw_graph_axes(id, graph_height) {
+  const scale = document.getElementById('scale').valueAsNumber;
+  // Cap the size of the graph. It is hard to view if it is too large, and
+  // browsers may not render a large graph because it takes too much memory.
+  // 4096 is still ridiculously large, and probably won't render on mobile
+  // browsers, but should be ok for many desktop environments.
+  const graph_width = Math.min(scale * DURATION, 4096);
+  const px_per_sec = graph_width / DURATION;
+  const canvas_width = Math.max(graph_width + X_LINE + 30, X_LINE + 250);
+  const canvas_height = graph_height + MARGIN + Y_LINE;
+  let ctx = setup_canvas(id, canvas_width, canvas_height);
+  ctx.fillStyle = CANVAS_BG;
+  ctx.fillRect(0, 0, canvas_width, canvas_height);
+
+  ctx.lineWidth = 2;
+  ctx.font = '16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.strokeStyle = AXES_COLOR;
+
+  // Draw main axes.
+  ctx.beginPath();
+  ctx.moveTo(X_LINE, MARGIN);
+  ctx.lineTo(X_LINE, graph_height + MARGIN);
+  ctx.lineTo(X_LINE+graph_width+20, graph_height + MARGIN);
+  ctx.stroke();
+
+  // Draw X tick marks.
+  const {step, tick_dist, num_ticks} = split_ticks(DURATION, px_per_sec, graph_width);
+  ctx.fillStyle = AXES_COLOR;
+  for (let n=0; n<num_ticks; n++) {
+    const x = X_LINE + ((n + 1) * tick_dist);
+    ctx.beginPath();
+    ctx.moveTo(x, canvas_height-Y_LINE);
+    ctx.lineTo(x, canvas_height-Y_LINE+5);
+    ctx.stroke();
+
+    ctx.fillText(`${(n+1) * step}s`, x, canvas_height - Y_LINE + 20);
+  }
+
+  // Draw vertical lines.
+  ctx.strokeStyle = GRID_COLOR;
+  ctx.setLineDash([2, 4]);
+  for (n=0; n<num_ticks; n++) {
+    const x = X_LINE + ((n + 1) * tick_dist);
+    ctx.beginPath();
+    ctx.moveTo(x, MARGIN);
+    ctx.lineTo(x, MARGIN+graph_height);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = TEXT_COLOR;
+  ctx.setLineDash([]);
+  return {canvas_width, canvas_height, graph_width, graph_height, ctx, px_per_sec};
+}
+
+// Determine the spacing and number of ticks along an axis.
+function split_ticks(max_value, px_per_v, max_px) {
+  const max_ticks = Math.floor(max_px / MIN_TICK_DIST);
+  if (max_ticks <= 1) {
+    // Graph is too small for even 1 tick.
+    return {step: max_value, tick_dist: max_px, num_ticks: 1};
+  }
+  let step;
+  if (max_value <= max_ticks) {
+    step = 1;
+  } else if (max_value <= max_ticks * 2) {
+    step = 2;
+  } else if (max_value <= max_ticks * 4) {
+    step = 4;
+  } else if (max_value <= max_ticks * 5) {
+    step = 5;
+  } else {
+    step = 10;
+    let count = 0;
+    while (true) {
+      if (count > 100) {
+        throw Error("tick loop too long");
+      }
+      count += 1;
+      if (max_value <= max_ticks * step) {
+        break;
+      }
+      step += 10;
+    }
+  }
+  const tick_dist = px_per_v * step;
+  const num_ticks = Math.floor(max_value / step);
+  return {step, tick_dist, num_ticks};
+}
+
+function codegen_time(unit) {
+  if (unit.rmeta_time == null) {
+    return null;
+  }
+  let ctime = unit.duration - unit.rmeta_time;
+  return [unit.rmeta_time, ctime];
+}
+
+function roundedRect(ctx, x, y, width, height, r) {
+  r = Math.min(r, width, height);
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+width-r, y);
+  ctx.arc(x+width-r, y+r, r, 3*Math.PI/2, 0);
+  ctx.lineTo(x+width, y+height-r);
+  ctx.arc(x+width-r, y+height-r, r, 0, Math.PI/2);
+  ctx.lineTo(x+r, y+height);
+  ctx.arc(x+r, y+height-r, r, Math.PI/2, Math.PI);
+  ctx.lineTo(x, y-r);
+  ctx.arc(x+r, y+r, r, Math.PI, 3*Math.PI/2);
+  ctx.closePath();
+}
+
+function pipeline_mouse_hit(event) {
+  // This brute-force method can be optimized if needed.
+  for (let box of HIT_BOXES) {
+    if (event.offsetX >= box.x && event.offsetX <= box.x2 &&
+        event.offsetY >= box.y && event.offsetY <= box.y2) {
+      return box;
+    }
+  }
+}
+
+function pipeline_mousemove(event) {
+  // Highlight dependency lines on mouse hover.
+  let box = pipeline_mouse_hit(event);
+  if (box) {
+    if (box.i != LAST_HOVER) {
+      LAST_HOVER = box.i;
+      let g = document.getElementById('pipeline-graph-lines');
+      let ctx = g.getContext('2d');
+      ctx.clearRect(0, 0, g.width, g.height);
+      ctx.save();
+      ctx.translate(X_LINE, MARGIN);
+      ctx.lineWidth = 2;
+      draw_dep_lines(ctx, box.i, true);
+
+      if (box.i in REVERSE_UNIT_DEPS) {
+        const dep_unit = REVERSE_UNIT_DEPS[box.i];
+        if (dep_unit in UNIT_COORDS) {
+          const {x, y, rmeta_x} = UNIT_COORDS[dep_unit];
+          draw_one_dep_line(ctx, x, y, box.i, true);
+        }
+      }
+      if (box.i in REVERSE_UNIT_RMETA_DEPS) {
+        const dep_unit = REVERSE_UNIT_RMETA_DEPS[box.i];
+        if (dep_unit in UNIT_COORDS) {
+          const {x, y, rmeta_x} = UNIT_COORDS[dep_unit];
+          draw_one_dep_line(ctx, rmeta_x, y, box.i, true);
+        }
+      }
+      ctx.restore();
+    }
+  }
+}
+
+render_pipeline_graph();
+render_timing_graph();
+
+// Set up and handle controls.
+{
+  const range = document.getElementById('min-unit-time');
+  const time_output = document.getElementById('min-unit-time-output');
+  time_output.innerHTML = `${range.value}s`;
+  range.oninput = event => {
+    time_output.innerHTML = `${range.value}s`;
+    render_pipeline_graph();
+  };
+
+  const scale = document.getElementById('scale');
+  const scale_output = document.getElementById('scale-output');
+  scale_output.innerHTML = `${scale.value}`;
+  scale.oninput = event => {
+    scale_output.innerHTML = `${scale.value}`;
+    render_pipeline_graph();
+    render_timing_graph();
+  };
+}
+
+</script>
+</body>
+</html>
