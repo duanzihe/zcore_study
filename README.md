@@ -1,2 +1,2 @@
 # zcore_study
-用于学习zcore的仓库
+用于学习zcore的仓库，目前正在推进的工作在master,已经完成的某项工作在对应的分支
