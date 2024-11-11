@@ -278,9 +278,11 @@ impl Thread {
     pub fn start(self: &Arc<Self>, thread_fn: ThreadFn) -> ZxResult {
         self.inner
             .lock()
-            .change_state(ThreadState::Running, &self.base);
-        let current = CurrentThread(self.clone());
+            .change_state(ThreadState::Running, &self.base); //设置线程状态为Running，表示线程已经准备好执行。
+        let current = CurrentThread(self.clone());//CurrentThread 是一个用于包装当前线程的结构体，表示当前线程的上下文。
+        // 获取thread_fn返回的future,表示这个任务在等待异步运行时的调度运行
         let future = thread_fn(current);
+        //从userboot的启动，一路追溯到了这里！在这里先用new将线程和一个future绑定在一起，作为threadSwitchFuture传递给spawn
         kernel_hal::thread::spawn(ThreadSwitchFuture::new(self.clone(), future));
         Ok(())
     }
@@ -724,7 +726,7 @@ struct ThreadSwitchFuture {
     thread: Arc<Thread>,
     future: Mutex<ThreadFuturePinned>,
 }
-
+///将一个线程和它的异步任务封装在一起
 impl ThreadSwitchFuture {
     pub fn new(thread: Arc<Thread>, future: ThreadFuturePinned) -> Self {
         Self {

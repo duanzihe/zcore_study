@@ -2,6 +2,7 @@
 
 use crate::{KernelConfig, KernelHandler, KCONFIG, KHANDLER};
 
+//公用的有参数的函数调用对应arch的具体的没有参数的函数！
 hal_fn_impl! {
     impl mod crate::hal_fn::boot {
         fn cmdline() -> alloc::string::String {
@@ -11,10 +12,10 @@ hal_fn_impl! {
         fn init_ram_disk() -> Option<&'static mut [u8]> {
             super::arch::init_ram_disk()
         }
-
+        
         fn primary_init_early(cfg: KernelConfig, handler: &'static impl KernelHandler) {
             info!("Primary CPU {} init early...", crate::cpu::cpu_id());
-            KCONFIG.init_once_by(cfg);
+            KCONFIG.init_once_by(cfg);  //初始化KCONFIG，在aarch64下就是zCore/disk/EFI/Boot/Boot.json中的信息。
             KHANDLER.init_once_by(handler);
             super::arch::primary_init_early();
         }

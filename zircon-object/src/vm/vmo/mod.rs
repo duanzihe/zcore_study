@@ -138,12 +138,16 @@ struct VmObjectInner {
 impl VmObject {
     /// Create a new VMO backing on physical memory allocated in pages.
     pub fn new_paged(pages: usize) -> Arc<Self> {
+
         Self::new_paged_with_resizable(false, pages)
+
     }
 
     /// Create a new VMO, which can be resizable, backing on physical memory allocated in pages.
     pub fn new_paged_with_resizable(resizable: bool, pages: usize) -> Arc<Self> {
         let base = KObjectBase::with_signal(Signal::VMO_ZERO_CHILDREN);
+  
+
         Arc::new(VmObject {
             resizable,
             _counter: CountHelper::new(),
@@ -151,6 +155,7 @@ impl VmObject {
             inner: Mutex::new(VmObjectInner::default()),
             base,
         })
+
     }
 
     /// Create a new VMO representing a piece of contiguous physical memory.

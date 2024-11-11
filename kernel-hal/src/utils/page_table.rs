@@ -178,11 +178,12 @@ impl<L: PageTableLevel, PTE: GenericPTE> PageTableImpl<L, PTE> {
 /// Public implementation.
 impl<L: PageTableLevel, PTE: GenericPTE> PageTableImpl<L, PTE> {
     pub fn new() -> Self {
+        //尝试分配一个物理页框，并初始化为零
         let root = PhysFrame::new_zero().expect("failed to alloc frame");
         Self {
-            root,
-            intrm_tables: Vec::new(),
-            _phantom: PhantomData,
+            root, //表示页表的根页框，负责存储最上层的页表项
+            intrm_tables: Vec::new(), //存储中间页表的向量。用于在多级页表结构中存储连接不同级别页表的页框。
+            _phantom: PhantomData, //用于标记与泛型参数 L 和 PTE 的关联，以确保类型系统能正确处理这些泛型。
         }
     }
 
@@ -210,12 +211,16 @@ impl<L: PageTableLevel, PTE: GenericPTE> GenericPageTable for PageTableImpl<L, P
     }
 
     fn map(&mut self, page: Page, paddr: PhysAddr, flags: MMUFlags) -> PagingResult {
+        //调用 get_entry_mut_or_create 方法获取与该页面对应的页表项。如果该项不存在，则创建一个新的项。
         let entry = self.get_entry_mut_or_create(page)?;
+        //检查页表项是否已经被使用。如果已被映射，返回一个错误
         if !entry.is_unused() {
             return Err(PagingError::AlreadyMapped);
         }
+        //将物理地址对齐并设置到页表项中，同时设置相应的标志。对齐确保物理地址符合页的大小要求。
         entry.set_addr(page.size.align_down(paddr));
         entry.set_flags(flags, page.size.is_huge());
+        //刷新翻译后备缓冲区（TLB），确保新映射生效。flush_tlb 函数会使得 CPU 重新加载地址映射。
         crate::vm::flush_tlb(Some(page.vaddr));
         trace!(
             "PageTable map: {:x?} -> {:x?}, flags={:?} in {:#x?}",

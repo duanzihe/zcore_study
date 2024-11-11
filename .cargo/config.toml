@@ -1,5 +1,7 @@
 ﻿[alias]
-xtask = "run --package xtask --release --"
+#疑惑，是否保留调试信息实际上是由xtask内部的决定的，这个release有什么用？
+xtask = "run --package xtask --release -- "   #解惑：经过对照实验，发现虽然这个release不影响i编译是否保留调试信息，但是会影响日志的输出，如果没有这个就会额外输出一些info等级的信息
+                                              #有--release的话就只输出warn等级的信息。
 git-proxy = "xtask git-proxy"
 zircon-init = "xtask zircon-init"
 update-all = "xtask update-all"
@@ -20,3 +22,4 @@ asm = "xtask asm"
 bin = "xtask bin"
 qemu = "xtask qemu"
 gdb = "xtask gdb"
+

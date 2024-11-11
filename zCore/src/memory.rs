@@ -18,6 +18,7 @@ use lock::Mutex;
 struct LockedHeap(Mutex<BuddyAllocator<27, UsizeBuddy, LinkedListBuddy>>);
 
 #[global_allocator]
+//初始化了一个可以管理最多 64 GiB 空间的堆分配器
 static HEAP: LockedHeap = LockedHeap(Mutex::new(BuddyAllocator::new()));
 
 /// 单页地址位数。
@@ -32,7 +33,7 @@ const PAGE_BITS: usize = 12;
 /// | qemu,virt SMP 1 |  16 KiB
 /// | qemu,virt SMP 4 |  32 KiB
 /// | allwinner,nezha | 256 KiB
-static mut MEMORY: [u8; 2 * 1024 * 1024] = [0u8; 2 * 1024 * 1024];
+static mut MEMORY: [u8; 2 * 1024 * 1024] = [0u8; 2 * 1024 * 1024];  //这个 MEMORY 作为一个全局的内存块，会被分配器管理，用于在程序启动时提供一小块堆内存，供动态内存分配使用。
 
 unsafe impl GlobalAlloc for LockedHeap {
     #[inline]
@@ -52,10 +53,11 @@ unsafe impl GlobalAlloc for LockedHeap {
     }
 }
 
-/// 初始化分配器，并将一个小的内存块注册到分配器中，用于启动需要的动态内存。
+/// 初始化一个堆分配器，并将预定义的 MEMORY 内存块注册到堆分配器中，供操作系统在启动时进行动态内存管理
+/// 可以理解为memory是分配器管理动态内存块们的“元数据”
 pub fn init() {
     unsafe {
-        log::info!("MEMORY = {:#?}", MEMORY.as_ptr_range());
+        log::info!("MEMORY = {:#?}", MEMORY.as_ptr_range()); //使用 log 库输出调试信息，将 MEMORY 中保存的内存区域的指针范围打印出来
         let mut heap = HEAP.0.lock();
         let ptr = NonNull::new(MEMORY.as_mut_ptr()).unwrap();
         heap.init(core::mem::size_of::<usize>().trailing_zeros() as _, ptr);
@@ -64,6 +66,8 @@ pub fn init() {
 }
 
 /// 将一些内存区域注册到分配器。
+/// 通过遍历传入的物理内存区域列表，将每一个有效的内存区域转换为虚拟地址后，注册到一个内存分配器中，以便之后可以分配和管理这些内存区域。
+/// 内存读写是基于分配器分配的内存块，但是要从虚拟地址空间找到物理地址空间对应的内存块就需要查页表
 pub fn insert_regions(regions: &[Range<PhysAddr>]) {
     let mut heap = HEAP.0.lock();
     let offset = phys_to_virt_offset();

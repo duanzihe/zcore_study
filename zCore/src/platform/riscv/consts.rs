@@ -41,12 +41,13 @@ impl KernelMemInfo {
             fn start();
             fn end();
         }
-        let paddr_base = start as usize;
-        let vaddr_base = 0xffff_ffc0_8020_0000;
+        let paddr_base = start as usize;        //qemu把内核加载到模拟板上时，就会给start这个在linker.ld中定义的符号分配一个在模拟板上的物理地址，这里用paddr_base获取它。
+        // 从启动后的输出信息来看内核的物理地址应该是Domain0 Next Address      : 0x0000000080200000
+        let vaddr_base = 0xffff_ffc0_8020_0000; //内核虚拟地址 ，一般来说，虚拟地址在高地址， 物理地址在低地址
         Self {
             paddr_base,
             vaddr_base,
-            size: end as usize - paddr_base,
+            size: end as usize - paddr_base, //end也是在linker.ld中定义的符号，相减得到内核大小（从这里可以推测内核代码的各个段应当是连续的）
         }
     }
 

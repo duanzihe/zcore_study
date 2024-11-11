@@ -15,7 +15,7 @@ pub struct MachineConfig {
     pub pci_support: bool,
     pub features: Vec<String>,
 }
-
+//根据传入的硬件名称 (hardware) 从config/machine-features.toml中选择并返回与该硬件对应的配置信息
 impl MachineConfig {
     pub fn select(hardware: impl AsRef<str>) -> Option<Self> {
         type ConfigFile = HashMap<String, HashMap<String, RawHardwareConfig>>;

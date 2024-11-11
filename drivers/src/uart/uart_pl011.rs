@@ -134,6 +134,7 @@ impl Pl011Inner {
 
         // Clear pending interrupts
         self.write_reg(self.intr_clr_reg, 0x7ff);
+
     }
 
     fn line_sts(&self) -> UartFrFlags {

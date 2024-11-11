@@ -11,9 +11,11 @@ members = [
     "z-config",
     "xtask",
 ]
-default-members = ["xtask"]
-exclude = ["zircon-user", "rboot"]
+#default-members 的作用仅限于在工作空间根目录运行 cargo build 等命令时，如果没有指定特定包，它会默认构建 default-members 中的包。
+#然而，当在 xtask 中显式调用 cargo build 时，这个命令会默认构建整个工作空间中的所有包，而不是仅限于 default-members
+default-members = ["xtask"] 
+exclude = ["zircon-user", "rboot"] #zircon-user和rboot似乎暂时都不被使用。
 
 [profile.release]
-lto = true
-debug = true
+lto = true  #启用链接时优化（Link Time Optimization），这可以减少最终生成的二进制文件的大小，并提高运行时性能。
+debug = true  #在发布模式下生成调试信息。这意味着即使是在 release 构建中，你仍然可以获得调试信息，这样可以在使用调试器（如 GDB）时更容易进行调试。

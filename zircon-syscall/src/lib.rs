@@ -52,8 +52,10 @@ pub struct Syscall<'a> {
     pub thread: &'a CurrentThread,
     pub thread_fn: ThreadFn,
 }
-
+//疑惑：隐式的生命周期注解是让编译器自己推定，可是生命周期注解本来不就是编译器自己推断不出来的时候才加的吗？
+//解惑：表示这个 Syscall 实例中的所有引用将具有相同的生命周期，但我们不需要显式地为其命名。
 impl Syscall<'_> {
+    ///传入系统调用号和系统调用参数
     pub async fn syscall(&mut self, num: u32, args: [usize; 8]) -> isize {
         let thread_name = self.thread.name();
         let proc_name = self.thread.proc().name();

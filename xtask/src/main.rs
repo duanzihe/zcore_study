@@ -27,23 +27,32 @@ use std::{
 use crate::build::{BuildArgs, BuildConfig};
 
 /// The path of zCore project.
+/// std::env!("CARGO_MANIFEST_DIR") 是一个编译时宏，用于获取当前 Cargo.toml 文件所在的目录路径，
+/// 不过因为xtask被包含到根目录的cargo.toml里，所以这里获得的其实是项目根目录
 static PROJECT_DIR: Lazy<&'static Path> =
     Lazy::new(|| Path::new(std::env!("CARGO_MANIFEST_DIR")).parent().unwrap());
 /// The path to store arch-dependent files from network.
+/// ARCHS代表了从网络中获取到的，现在存放在项目根目录下ignored/origin/archs的架构路径
 static ARCHS: Lazy<PathBuf> =
     Lazy::new(|| PROJECT_DIR.join("ignored").join("origin").join("archs"));
 /// The path to store third party repos from network.
+/// 存储从网络上获取的第三方代码仓库或依赖
 static REPOS: Lazy<PathBuf> =
     Lazy::new(|| PROJECT_DIR.join("ignored").join("origin").join("repos"));
-/// The path to cache generated files durning processes.
+/// The path to cache generated files during processes.
+/// 用于存储缓存生成的文件路径,其实就是ignored/target
 static TARGET: Lazy<PathBuf> = Lazy::new(|| PROJECT_DIR.join("ignored").join("target"));
 
 /// Build or test zCore.
-#[derive(Parser)]
-#[clap(name = "zCore configure")]
+/// Command Line Interface（命令行接口）
+#[derive(Parser)]  //通过实现 Parser trait，Cli 结构体将能够处理命令行输入，将其解析为结构体的字段，并提供错误处理、帮助信息等功能。
+#[clap(name = "zCore configure")] //这个属性设置了生成的命令行工具的名称。这里的 "zCore configure" 是命令行工具的名称，它会出现在命令行帮助信息中。
+//version：这个属性会自动将版本号添加到命令行工具的帮助信息中。clap 会从 Cargo.toml 文件中提取版本号，或者你可以在 Cargo.toml 中定义版本号。
+//about：这个属性会将工具的简要描述添加到帮助信息中。这是对工具的简要说明，帮助用户理解其功能。
+//long_about = None：这是一个可选的属性，用于设置更详细的描述信息。如果设置为 None，则不会提供更详细的描述。如果需要详细描述，可以提供一个字符串。
 #[clap(version, about, long_about = None)]
 struct Cli {
-    #[clap(subcommand)]
+    #[clap(subcommand)] //表明command 字段是用来存储命令行子命令的。
     command: Commands,
 }
 
@@ -139,13 +148,14 @@ enum Commands {
     Bin(OutArgs),
 
     /// 在 qemu 中启动 zCore。Runs zCore in qemu.
+    /// 表示一个名为 qemu 的子命令，它接收并解析 QemuArgs 类型的参数
     ///
     /// # Example
     ///
     /// ```bash
     /// cargo qemu --arch riscv64 --smp 4
     /// ```
-    Qemu(QemuArgs),
+    Qemu(QemuArgs),  
 
     /// 启动 gdb 并连接到指定端口。Launches gdb and connects to a port.
     ///
@@ -274,7 +284,10 @@ struct LinuxLibosArg {
 
 fn main() {
     use Commands::*;
+    // 通过Cli::parse()解析命令行参数，得到一个 Cli的实例，它的command成员是一个Commands 枚举类型，并且这个枚举中的变体会解析输入命令的相关参数。
+    //在这里进行匹配，command获取到哪个命令就执行对应的代码
     match Cli::parse().command {
+        //这个变体处理 GitProxy 命令。如果 port 有值，就设置代理；否则取消代理。
         GitProxy(ProxyPort { port, global }) => {
             if let Some(port) = port {
                 set_git_proxy(global, port);
@@ -282,12 +295,14 @@ fn main() {
                 unset_git_proxy(global);
             }
         }
+        //只有在非 riscv64 架构上才会执行 Dump 命令，调用 dump_config 函数。
         #[cfg(not(target_arch = "riscv64"))]
         Dump => dump::dump_config(),
+        //这些命令直接调用各自的函数。
         ZirconInit => install_zircon_prebuilt(),
         UpdateAll => update_all(),
         CheckStyle => check_style(),
-
+        //这些命令通常会接受一个参数 arg，并调用 arg.linux_rootfs() 的相关方法。
         Rootfs(arg) => arg.linux_rootfs().make(true),
         MuslLibs(arg) => {
             // 丢弃返回值
@@ -298,12 +313,14 @@ fn main() {
         LibcTest(arg) => arg.linux_rootfs().put_libc_test(),
         OtherTest(arg) => arg.linux_rootfs().put_other_test(),
         Image(arg) => arg.linux_rootfs().image(),
-
+        
+        //这些命令调用传入的参数的相应方法，执行任务。
         Asm(args) => args.asm(),
         Bin(args) => {
             // 丢弃返回值
             args.bin();
         }
+        //qemu命令只会解析：arch,smp,debug，gdb.
         Qemu(args) => args.qemu(),
         Gdb(args) => args.gdb(),
 
@@ -326,17 +343,22 @@ fn install_zircon_prebuilt() {
     use commands::wget;
     use os_xtask_utils::{dir, CommandExt, Tar};
     const URL: &str =
-        "https://github.com/rcore-os/zCore/releases/download/prebuilt-2208/prebuilt.tar.xz";
-    let tar = Arch::X86_64.origin().join("prebuilt.tar.xz");
+        "https://github.com/rcore-os/zCore/releases/download/prebuilt-2208/prebuilt-all.tar.xz";  //修改！要获取arm64的prebuilt而不只是x86的
+    
+    //原版：let tar = Arch::X86_64.origin().join("prebuilt.tar.xz"); // 其实就是在/ignored/origin/archs/x86_64/prebuilt.tar.xz
+    let tar = Arch::Aarch64.origin().join("prebuilt-all.tar.xz"); // 修改！在/ignored/origin/archs/aarch64/prebuilt-all.tar.xz
+   
     wget(URL, &tar);
     // 解压到目标路径
     let dir = PROJECT_DIR.join("prebuilt");
     let target = TARGET.join("zircon");
-    dir::rm(&dir).unwrap();
-    dir::rm(&target).unwrap();
+    dir::rm(&dir).unwrap(); //删除zcore/prebuilt
+    dir::rm(&target).unwrap(); //删除ignored/target/zircon
     fs::create_dir_all(&target).unwrap();
-    Tar::xf(&tar, Some(&target)).invoke();
-    dircpy::copy_dir(target.join("prebuilt"), dir).unwrap();
+    Tar::xf(&tar, Some(&target)).invoke();  //把下载得到的prebuilt-all.tar.xz解压到ignored/target/zircon
+    dircpy::copy_dir(target.join("prebuilt"), dir).unwrap(); //ignored/target/zircon/prebuilt/...复制到prebuilt/...
+    
+
 }
 
 /// 更新工具链和依赖。
@@ -443,7 +465,7 @@ mod libos {
 
     /// libos 模式执行应用程序。
     pub(super) fn linux_run(args: String) {
-        println!("{}", std::env!("OUT_DIR"));
+        println!("{}", std::env!("OUT_DIR"));  //这里报错 Rust 项目中使用了构建脚本（build scripts），但 VS Code 的 Rust Analyzer 或 Cargo 没有正确配置以处理这些构建脚本
         rootfs(false);
         // 启动！
         Cargo::run()

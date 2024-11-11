@@ -51,12 +51,15 @@ pub fn boot_options() -> BootOptions {
             }
         } else {
             use alloc::string::ToString;
-            let cmdline = kernel_hal::boot::cmdline();
-            let options = parse_cmdline(&cmdline);
+            let cmdline = kernel_hal::boot::cmdline(); //调用硬件抽象层（HAL）接口获取内核的启动命令行参数
+            let options = parse_cmdline(&cmdline); //会将命令行字符串解析为一个 HashMap，其中键为命令行参数的名称，值为对应的参数值
+            //返回了一个 BootOptions 结构体，里面包含了从命令行解析出的关键信息
             BootOptions {
                 cmdline: cmdline.clone(),
                 log_level: options.get("LOG").unwrap_or(&"").to_string(),
                 #[cfg(feature = "linux")]
+                //root_proc 字段表示根进程路径，它从命令行参数的 ROOTPROC 键中获取，默认为 /bin/busybox?sh。这个字段用于指定系统启动时的初始进程。
+                //疑惑，这里的参数是什么意思？
                 root_proc: options.get("ROOTPROC").unwrap_or(&"/bin/busybox?sh").to_string(),
             }
         }

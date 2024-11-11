@@ -11,6 +11,7 @@ use zcore_drivers::uart::{BufferedUart, Pl011Uart};
 use zcore_drivers::virtio::{VirtIOHeader, VirtIoBlk};
 use zcore_drivers::Device;
 
+//设置 UART 和 GIC（通用中断控制器）并注册相应的中断处理程序
 pub fn init_early() {
     let uart = Pl011Uart::new(phys_to_virt(KCONFIG.uart_base));
     let uart = Arc::new(uart);

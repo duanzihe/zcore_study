@@ -10,6 +10,7 @@ use crate::addr::{align_down, align_up};
 use crate::utils::page_table::{GenericPTE, PageTableImpl, PageTableLevel3};
 use crate::{mem::phys_to_virt, MMUFlags, PhysAddr, VirtAddr, KCONFIG};
 
+//注意，这里上的锁只阻止多个hart同时修改内核页表，但不会妨碍多个harts通过MMU硬件同时访问内核页表。
 lazy_static! {
     static ref KERNEL_PT: Mutex<PageTable> = Mutex::new(init_kernel_page_table().unwrap());
 }
@@ -28,15 +29,16 @@ fn init_kernel_page_table() -> PagingResult<PageTable> {
 
         fn bootstack();
         fn bootstacktop();
-    }
-
+    }   
+    //这里的pagetable结构体就在本文件的末尾定义，是sv39的结构。
     let mut pt = PageTable::new();
+    //这里定义了一个闭包，用了上文环境中定义的pt变量，接受起止地址和MMUFlags,成功了就返回页表，失败了就返回paging失败的原因。
     let mut map_range = |start: VirtAddr, end: VirtAddr, flags: MMUFlags| -> PagingResult {
         pt.map_cont(
-            crate::addr::align_down(start),
-            crate::addr::align_up(end - start),
-            start - KCONFIG.phys_to_virt_offset,
-            flags | MMUFlags::HUGE_PAGE,
+            crate::addr::align_down(start), //起始虚拟地址
+            crate::addr::align_up(end - start), //需要map的范围
+            start - KCONFIG.phys_to_virt_offset,//起始物理地址
+            flags | MMUFlags::HUGE_PAGE, // 保持原有flags的同时，额外启用大页模式。
         )
     };
 
@@ -107,6 +109,7 @@ pub(super) fn kernel_page_table() -> &'static Mutex<PageTable> {
 }
 
 pub(super) fn init() {
+    //尝试获得对 KERNEL_PT 的锁，并激活这个页表。
     unsafe { KERNEL_PT.lock().activate() };
 }
 
@@ -276,4 +279,5 @@ impl Debug for Rv64PTE {
 }
 
 /// Sv39: Page-Based 39-bit Virtual-Memory System.
+/// 这里的PageTableImpl在kernel-hal/src/utils/vm.rs中定义。
 pub type PageTable = PageTableImpl<PageTableLevel3, Rv64PTE>;

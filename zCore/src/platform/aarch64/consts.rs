@@ -2,7 +2,7 @@
 
 use spin::Once;
 
-static OFFSET: Once<usize> = Once::new();
+static OFFSET: Once<usize> = Once::new();  //once是为了确保代码只执行一次，是惰性，且线程安全的
 
 #[inline]
 pub(super) fn save_offset(offset: usize) {

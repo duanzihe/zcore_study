@@ -73,13 +73,14 @@ impl Job {
     pub fn root() -> Arc<Self> {
         let job = Arc::new(Job {
             base: KObjectBase::new(),
-            _counter: CountHelper::new(),
+            _counter: CountHelper::new(), //Z报错，页面错误
             parent: None,
             parent_policy: JobPolicy::default(),
             exceptionate: Exceptionate::new(ExceptionChannelType::Job),
             debug_exceptionate: Exceptionate::new(ExceptionChannelType::JobDebugger),
             inner: Mutex::new(JobInner::default()),
         });
+        
         job.inner.lock().self_ref = Arc::downgrade(&job);
         job
     }

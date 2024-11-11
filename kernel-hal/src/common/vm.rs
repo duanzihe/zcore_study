@@ -90,6 +90,8 @@ pub trait GenericPageTable: Sync + Send {
     /// Query the physical address which the page of `vaddr` maps to.
     fn query(&self, vaddr: VirtAddr) -> PagingResult<(PhysAddr, MMUFlags, PageSize)>;
 
+    ///将一段连续的虚拟内存地址映射到对应的物理内存地址。
+    /// 它会根据页的大小（4K、2M、1G）选择最合适的页大小来进行映射，同时支持大页（huge page）模式。
     fn map_cont(
         &mut self,
         start_vaddr: VirtAddr,
@@ -97,26 +99,33 @@ pub trait GenericPageTable: Sync + Send {
         start_paddr: PhysAddr,
         flags: MMUFlags,
     ) -> PagingResult {
+        //先通过 assert! 语句来确保 start_vaddr、start_paddr 和 size 都是按页大小对齐的
         assert!(is_aligned(start_vaddr));
         assert!(is_aligned(start_vaddr));
         assert!(is_aligned(size));
+        //使用 debug! 打印调试信息，显示虚拟地址到物理地址的映射范围以及映射标志
         debug!(
             "map_cont: {:#x?} => {:#x}, flags={:?}",
             start_vaddr..start_vaddr + size,
             start_paddr,
             flags
         );
+
         let mut vaddr = start_vaddr;
         let mut paddr = start_paddr;
         let end_vaddr = vaddr + size;
+        // 如果含有huge_page标志位
         if flags.contains(MMUFlags::HUGE_PAGE) {
+            //函数通过 while 循环遍历虚拟地址范围，将每一段虚拟内存映射到相应的物理内存。
             while vaddr < end_vaddr {
                 let remains = end_vaddr - vaddr;
+                //当剩余内存大小大于等于 1G 且虚拟地址和物理地址都对齐到 1G 边界时，使用 1G 页进行映射。
                 let page_size = if remains >= PageSize::Size1G as usize
                     && PageSize::Size1G.is_aligned(vaddr)
                     && PageSize::Size1G.is_aligned(paddr)
                 {
                     PageSize::Size1G
+                //当剩余内存大小大于等于 2M 且虚拟地址和物理地址都对齐到 2M 边界时，使用 2M 页。
                 } else if remains >= PageSize::Size2M as usize
                     && PageSize::Size2M.is_aligned(vaddr)
                     && PageSize::Size2M.is_aligned(paddr)
@@ -126,11 +135,13 @@ pub trait GenericPageTable: Sync + Send {
                     PageSize::Size4K
                 };
                 let page = Page::new_aligned(vaddr, page_size);
+                //通过 self.map 函数来进行页表的具体映射。这个操作是将 page（虚拟页）映射到 paddr（物理地址），并应用 flags 标志
                 self.map(page, paddr, flags)?;
                 vaddr += page_size as usize;
                 paddr += page_size as usize;
             }
         } else {
+        //如果没有huge_page标记，就不启用大页模式，始终使用 4K 页映射
             while vaddr < end_vaddr {
                 let page_size = PageSize::Size4K;
                 let page = Page::new_aligned(vaddr, page_size);

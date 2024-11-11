@@ -191,6 +191,7 @@ impl Process {
             handle_value = arg1.map_or(INVALID_HANDLE, |handle| inner.add_handle(handle));
         }
         thread.set_first_thread();
+        //设置线程的初始状态（如指令指针和栈指针），并开始在线程中执行程序
         let res = thread.start_with_entry(entry, stack, handle_value as usize, arg2, thread_fn);
         if res.is_err() && handle_value != INVALID_HANDLE {
             self.inner.lock().remove_handle(handle_value).ok();

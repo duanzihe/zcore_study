@@ -33,6 +33,7 @@ impl VMObjectTrait for VMObjectSlice {
     }
 
     fn write(&self, offset: usize, buf: &[u8]) -> ZxResult {
+        warn!("step_write");
         self.check_range(offset, buf.len())?;
         self.parent.write(offset + self.offset, buf)
     }

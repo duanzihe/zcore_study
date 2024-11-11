@@ -23,6 +23,7 @@ cfg_if! {
                     Arc::new(block)
                 }
                 #[cfg(not(feature = "mock-disk"))] {
+                //在xtask阶段制作好了rootfs，并将它的路径作为参数传递给了qemu，qemu就将它当做设备写入了设备树，现在内核再通过rootfs()打开这个设备来访问根文件系统
                     use linux_object::fs::rcore_fs_wrapper::*;
                     if let Some(initrd) = init_ram_disk() {
                         Arc::new(MemBuf::new(initrd))
@@ -56,6 +57,12 @@ pub(crate) fn init_ram_disk() -> Option<&'static mut [u8]> {
         extern "C" {
             fn _user_img_start();
             fn _user_img_end();
+        }
+        //Z修改！定位
+        {
+            let start = _user_img_start as usize;
+            let end = _user_img_end as usize;
+            warn!("_user_img_start: 0x{:x}, _user_img_end: 0x{:x}", start, end);
         }
         Some(unsafe {
             core::slice::from_raw_parts_mut(

@@ -57,17 +57,19 @@ impl IoMapper for IoMapperImpl {
 pub(super) fn init() -> DeviceResult {
     // prase DTB and probe devices
     let dev_list =
+    //使用 DevicetreeDriverBuilder 来解析设备树，获取设备列表。这里 phys_to_virt 函数用于将物理地址转换为虚拟地址，以便访问设备树数据。
         DevicetreeDriverBuilder::new(phys_to_virt(crate::KCONFIG.dtb_paddr), IoMapperImpl)?
-            .build()?;
-    // add drivers
+            .build()?; //build会根据设备的类型和属性创建相应的结构体实例
+    //遍历解析到的设备列表，判断设备类型,并添加到驱动中。
     for dev in dev_list.into_iter() {
+        //如果是 UART 设备，则将其封装为 BufferedUart 后再添加到驱动中
         if let Device::Uart(uart) = dev {
             drivers::add_device(Device::Uart(BufferedUart::new(uart)));
         } else {
             drivers::add_device(dev);
         }
     }
-
+    // 如果未禁用 PCI 支持，调用 PCI 初始化，获取并添加所有 PCI 设备。
     #[cfg(not(feature = "no-pci"))]
     {
         use alloc::sync::Arc;
@@ -77,9 +79,10 @@ pub(super) fn init() -> DeviceResult {
             drivers::add_device(d);
         }
     }
-
+    // 初始化中断控制器，以便处理硬件中断
     intc_init()?;
 
+    //如果启用了图形功能，初始化图形控制台，并根据需要创建渲染线程
     #[cfg(feature = "graphic")]
     if let Some(display) = drivers::all_display().first() {
         crate::console::init_graphic_console(display.clone());
@@ -88,7 +91,7 @@ pub(super) fn init() -> DeviceResult {
             crate::thread::spawn(crate::common::future::DisplayFlushFuture::new(display, 30));
         }
     }
-
+    //如果启用了环回功能，初始化网络模块。
     #[cfg(feature = "loopback")]
     {
         use crate::net;
@@ -97,17 +100,18 @@ pub(super) fn init() -> DeviceResult {
 
     Ok(())
 }
-
+//查找对于cpuid的中断控制器，为他注册软中断和时间中断的处理程序
 pub(super) fn intc_init() -> DeviceResult {
+    //找到与当前 CPU 相关的中断控制器
     let irq = drivers::all_irq()
         .find(format!("riscv-intc-cpu{}", crate::cpu::cpu_id()).as_str())
         .expect("IRQ device 'riscv-intc' not initialized!");
-    // register soft interrupts handler
+    // 为中断控制器注册了一个处理程序，用于处理软中断。当发生软中断时，控制器会调用 super::trap::super_soft 函数来处理该中断。
     irq.register_handler(
         ScauseIntCode::SupervisorSoft as _,
         Box::new(super::trap::super_soft),
     )?;
-    // register timer interrupts handler
+    // 同上，注册一个处理时间中断的程序
     irq.register_handler(
         ScauseIntCode::SupervisorTimer as _,
         Box::new(super::trap::super_timer),

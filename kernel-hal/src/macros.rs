@@ -28,7 +28,7 @@ macro_rules! hal_fn_def {
     };
     () => {};
 }
-
+///利用传入的函数实现hal层。
 macro_rules! hal_fn_impl {
     (
         $(
