@@ -21,7 +21,7 @@ impl Syscall<'_> {
     /// - `buf` – pointer to buffer to receive path
     /// - `len` – size of buf
     pub fn sys_getcwd(&self, mut buf: UserOutPtr<u8>, len: usize) -> SysResult {
-        info!("getcwd: buf={:?}, len={:#x}", buf, len);
+        info!("dzh_test,getcwd: buf={:?}, len={:#x}", buf, len);
         let proc = self.linux_process();
         let cwd = proc.current_working_directory();
         if cwd.len() + 1 > len {
@@ -34,8 +34,9 @@ impl Syscall<'_> {
     /// Change the current directory.
     /// - `path` – pointer to string with name of path
     pub fn sys_chdir(&self, path: UserInPtr<u8>) -> SysResult {
+
         let path = path.as_c_str()?;
-        info!("chdir: path={:?}", path);
+        error!("chdir: path={:?}", path);  //修改！这里为了确定执行，增加了一个error信息。
 
         let proc = self.linux_process();
         let inode = proc.lookup_inode(path)?;
