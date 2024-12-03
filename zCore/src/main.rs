@@ -66,9 +66,13 @@ fn primary_main(config: kernel_hal::KernelConfig) {
             // 调用 fs::rootfs() 获取根文件系统的相关信息，以便后续的进程可以访问文件。
             // 在xtask阶段制作好了rootfs，并将它的路径作为参数传递给了qemu，qemu就将它当做设备写入了设备树，现在内核再通过rootfs()打开这个设备来访问根文件系统
             let rootfs = fs::rootfs();
+
             //传入args=[/bin/busy/box,sh],envs="PATH=/usr/sbin:/usr/bin:/sbin:/bin",rootfs就是之前xtask阶段用rcore的simple_file_system制作的根文件系统
+            //测试报错，就是在这个地方会报错
             let proc = zcore_loader::linux::run(args, envs, rootfs);
             //上面这个过程完成后，用户空间的 sh 进程将运行，并可以执行相应的命令。此时，内核成功地将控制权交给用户空间，实现了用户与操作系统的交互。
+
+            
             //接下来只需要等待它退出就可以了。
             utils::wait_for_exit(Some(proc))
         } else if #[cfg(feature = "zircon")] {

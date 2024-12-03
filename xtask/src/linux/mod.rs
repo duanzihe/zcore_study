@@ -24,21 +24,28 @@ impl LinuxRootfs {
     /// 构造启动内存文件系统 rootfs，间接产物在ignored目录下,最终产物在rootfs目录下。
     /// 对于 x86_64，这个文件系统可用于 libos 启动。
     /// 若设置 `clear`，将清除已存在的目录。
-    pub fn make(&self, clear: bool) {
+    pub fn make(&self, _clear: bool) {
         // 若已存在且不需要清空，可以直接退出
         let dir = self.path();//这里的path就是/rootfs/架构
-        if dir.is_dir() && !clear {
-            return;
-        }
+
+        //测试修改，在这里取消重用，让每次修改都被编译
+        // if dir.is_dir() && !clear {
+        //     return;
+        // }
+
         // 如果没制作，就准备最小系统需要的资源，交叉编译工具链和busybox的可执行文件
         let musl = self.0.linux_musl_cross(); //这里的0是图方便，反正这linuxrootfs是元组结构体，也就一个arch成员
         let busybox = self.busybox(&musl);
         // 先清空，再创建目标目录，就是rootfs/架构名/bin和rootfs/架构名/lib
         let bin = dir.join("bin");
         let lib = dir.join("lib");
+        let lib_test = dir.join("libc-test");
+        let functional = lib_test.join("src/functional");
         dir::clear(&dir).unwrap();
         fs::create_dir(&bin).unwrap();
         fs::create_dir(&lib).unwrap();
+        fs::create_dir(&lib_test).unwrap();
+        fs::create_dir_all(&functional).unwrap();
 
         // 从ignored/target/架构名/busybox将 busybox的可执行文件拷贝到rootfs/架构名/bin中
         fs::copy(busybox, bin.join("busybox")).unwrap();
@@ -50,6 +57,25 @@ impl LinuxRootfs {
             .join("libc.so");
         let to = lib.join(format!("ld-musl-{arch}.so.1", arch = self.0.name()));//这里的to就是rootfs/架构名/lib/ld-musl-riscv64.so.1
         fs::copy(from, &to).unwrap();
+
+
+        // 新增：将 /libc-test/src/functional 下的所有 .exe 文件复制到 /rootfs/aarch64/libc-test/src/functional 中
+        let source_dir = Path::new("./libc-test/src/functional");
+        if source_dir.exists() {
+            for entry in fs::read_dir(source_dir).unwrap() {
+                let entry = entry.unwrap();
+                let path = entry.path();
+
+                // 如果是 .exe 文件
+                if path.is_file() && path.extension().and_then(|ext| ext.to_str()) == Some("exe") {
+                    let dest_path = functional.join(path.file_name().unwrap());
+                    fs::copy(&path, &dest_path).unwrap();
+                }
+            }
+        }
+
+
+
         //裁剪指定文件的大小
         Ext::new(self.strip(musl)).arg("-s").arg(to).invoke();
         // 为常用功能建立符号链接

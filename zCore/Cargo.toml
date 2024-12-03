@@ -36,7 +36,7 @@ link-user-img = []
 
 # For bare-metal testing, if kernel panic or the root process is finished,
 # shutdown the machine and exit QEMU.
-baremetal-test = ["executor/baremetal-test"]
+baremetal-test = ["executor/baremetal-test"]  #激活了 executor 模块内定义的 baremetal-test 子特性
 
 # Run as Zircon mode
 zircon = ["zcore-loader/zircon"]  # 表示启用 zircon 特性时，会同时启用 zcore-loader crate 中的 zircon

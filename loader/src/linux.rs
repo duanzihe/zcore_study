@@ -26,14 +26,17 @@ pub fn run(args: Vec<String>, envs: Vec<String>, rootfs: Arc<dyn FileSystem>) ->
         stack_pages: USER_STACK_PAGES,
         root_inode: rootfs.root_inode(),
     };
-
-    let inode = rootfs.root_inode().lookup(&args[0]).unwrap();
+    //之前是报错这里找不到对应的文件，在修改后可以了，现在错误推进到39行，下面的loaer.load那里。
+    let inode = rootfs.root_inode().lookup(&args[0]).unwrap();  
     let data = inode.read_as_vec().unwrap();
     let path = args[0].clone();
 
     let pg_token = kernel_hal::vm::current_vmtoken();
     debug!("current pgt = {:#x}", pg_token);
+
+    //更具体的报错是'called `Result::unwrap()` on an `Err` value: ENOENT', loader/src/linux.rs:40:23
     //调用zircon-object/src/task/thread.start设置好要执行的thread
+    //在这里应该会加载要执行的测试用例，返回entry和sp
     let (entry, sp) = loader.load(&proc.vmar(), &data, args, envs, path).unwrap();
 
     thread

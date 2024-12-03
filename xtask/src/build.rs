@@ -196,6 +196,7 @@ impl QemuArgs {
     pub fn qemu(self) {
         // 递归 image， linux_rootfs() 方法创建了适用于特定架构的根文件系统"实例"，但这个文件系统本身并不具备启动能力，只是个空实例罢了。
         // 使用 image() 方法，用make制作”内容“（busybox），再用fuse将其压入”框架“，(rcore_sys),将他们打包成镜像文件，使其能够被识别和加载。
+        //最终在zcore目录下生成对应架构的img文件
         self.arch.linux_rootfs().image();
         // 构造各种字符串
         let arch = self.arch.arch;
@@ -214,7 +215,7 @@ impl QemuArgs {
         })
         .bin(None);
 
-//在执行完bin的from_args之后，就已经启用了zircon特性！
+//在执行完bin的from_args之后，就已经启用了zircon或者linux特性！
 
         // 设置 Qemu 参数，这个arg的具体实现会一直追溯到工具链提供的部分，暂时不深究，知道是用来添加参数就行。
         let mut qemu = Qemu::system(arch_str);

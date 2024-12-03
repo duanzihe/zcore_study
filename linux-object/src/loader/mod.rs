@@ -26,8 +26,8 @@ impl LinuxElfLoader {
     /// load a Linux ElfFile and return a tuple of (entry,sp)
     pub fn load(
         &self,
-        vmar: &Arc<VmAddressRegion>,
-        data: &[u8],
+        vmar: &Arc<VmAddressRegion>,    //这个elf的虚拟内存区
+        data: &[u8],                   //这个elf的数据
         args: Vec<String>,
         envs: Vec<String>,
         path: String,
