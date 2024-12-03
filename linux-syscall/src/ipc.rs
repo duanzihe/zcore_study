@@ -69,6 +69,8 @@ impl Syscall<'_> {
         Ok(id)
     }
 
+    //尝试运行下面的doctest会报一大堆错
+
     /// System V semaphore operations
     /// (see [linux man semop(2)](https://www.man7.org/linux/man-pages/man2/semop.2.html)).
     ///

@@ -84,7 +84,7 @@ impl LinuxRootfs {
             "pidof", "ping", "ping6", "printenv", "ps", "pwd", "rm", "rmdir", "sh", "sleep",
             "stat", "tar", "touch", "true", "uname", "usleep", "watch",
         ];
-        let bin = dir.join("bin"); //这就是为什么可以在rootfs里看到ls,cat等命令的二进制文件
+        let bin = dir.join("bin"); //这就是为什么可以在rootfs/架构里看到ls,cat等命令的二进制文件
         for sh in SH {
             unix::fs::symlink("busybox", bin.join(sh)).unwrap();//这些二进制文件其实都是指向busybox的软链接，仔细看的话右边还能看到一个“符号链接”呢。
         }

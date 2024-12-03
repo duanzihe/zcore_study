@@ -160,6 +160,7 @@ macro_rules! run_with_irq_enable {
     };
 }
 
+//这个函数调用了总系统调用处理函数syscall
 async fn handle_user_trap(thread: &CurrentThread, mut ctx: Box<UserContext>) -> ZxResult {
     let reason = ctx.trap_reason();
     if let TrapReason::Syscall = reason {
