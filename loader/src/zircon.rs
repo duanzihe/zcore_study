@@ -109,7 +109,7 @@ fn kcounter_vmos() -> (Arc<VmObject>, Arc<VmObject>) {  //返回两个 VmObject 
 /// 为zbi初始化一个vmo
 pub fn run_userboot(zbi: impl AsRef<[u8]>, cmdline: &str) -> Arc<Process> {
 
-    let userboot = boot_library!("userboot"); //用userboot接收嵌入的userboot程序 Z报错！
+    let userboot = boot_library!("nebula_libuserboot.so"); //用userboot接收嵌入的userboot程序 Z报错！
 
 
     let vdso = boot_library!("libzircon.so"); //用vdso接收嵌入的libzircon系统调用库

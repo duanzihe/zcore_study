@@ -3,7 +3,7 @@ arch = "riscv64"
 
 [qemu.virt-aarch64]
 arch = "aarch64"
-link-user-img = "prebuilt/zircon/arm64/zcore_bringup.zbi" #修改！增加了这一行以提供zbi
+link-user-img = "prebuilt/zircon/arm64/zcore_old_bringup.zbi" #修改！增加了这一行以提供zbi
 
 [qemu.virt-x86_64]
 arch = "x86_64"
