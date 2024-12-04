@@ -1,0 +1,14 @@
+**/.*/*
+!.github/*
+!.cargo/*
+
+**/target
+*.img
+
+/ignored
+/rootfs
+# for aarch64 only
+/zCore/disk
+
+.DS_Store
+__pycache__

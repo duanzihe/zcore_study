@@ -1,0 +1,19 @@
+[workspace]
+members = [
+    "drivers",
+    "kernel-hal",
+    "zircon-object",
+    "zircon-syscall",
+    "linux-object",
+    "linux-syscall",
+    "loader",
+    "zCore",
+    "z-config",
+    "xtask",
+]
+default-members = ["xtask"]
+exclude = ["zircon-user", "rboot"]
+
+[profile.release]
+lto = true
+debug = true

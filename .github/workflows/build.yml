@@ -1,0 +1,147 @@
+name: Build CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 22 * * *'  # every day at 22:00 UTC
+
+env:
+  rust_toolchain: nightly-2022-08-05
+
+jobs:
+  workspace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.rust_toolchain }}
+          override: true
+          components: rust-src, rustfmt, clippy
+
+      - name: Check format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --all-features
+
+      - name: Clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-features
+
+      - name: Pull prebuilt images
+        if: github.event_name == 'schedule'
+        run: make zircon-init
+
+      - name: Build docs
+        if: github.event_name == 'schedule'
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --no-deps --all-features --workspace
+
+  test-libos:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [linux, zircon]
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.rust_toolchain }}
+          components: rust-src, llvm-tools-preview, clippy
+
+      - name: Pull prebuilt images
+        if: matrix.mode == 'zircon'
+        run: make zircon-init
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --package zcore --features "${{ matrix.mode }} libos"
+
+      - name: Clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --package zcore --features "${{ matrix.mode }} libos"
+
+  test-bare-metal:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, riscv64, aarch64]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ env.rust_toolchain }}
+          components: rust-src, llvm-tools-preview, clippy
+
+      - uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-binutils
+          version: latest
+
+      - name: Install qemu-utils
+        run: sudo apt update && sudo apt install qemu-utils
+
+      - name: Pull prebuilt images
+        if: matrix.arch == 'x86_64'
+        run: make zircon-init
+
+      - name: Build ${{ matrix.arch }} bare-metal zircon
+        if: matrix.arch == 'x86_64'
+        run: cd zCore && make build  ARCH=${{ matrix.arch }} ZBI=core-tests
+
+      - name: Clippy ${{ matrix.arch }} bare-metal zircon
+        if: matrix.arch == 'x86_64'
+        run: cd zCore && make clippy ARCH=${{ matrix.arch }} ZBI=core-tests
+
+      - name: Build ${{ matrix.arch }} bare-metal linux
+        if: matrix.arch != 'x86_64'
+        run: cd zCore && make build  ARCH=${{ matrix.arch }} LINUX=1
+
+      - name: Clippy ${{ matrix.arch }} bare-metal linux
+        run: cd zCore && make clippy ARCH=${{ matrix.arch }} LINUX=1
+
+      - name: Xtask Build bare-metal linux
+        run: cargo bin -m virt-${{ matrix.arch }}
+
+  build-user:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install prebuilt images
+        run: make zircon-init
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly-2022-01-20
+          target: x86_64-fuchsia
+
+      - name: Build Zircon user programs
+        run: cd zircon-user && make build MODE=release
