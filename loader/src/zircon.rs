@@ -109,16 +109,16 @@ fn kcounter_vmos() -> (Arc<VmObject>, Arc<VmObject>) {  //返回两个 VmObject 
 /// 为zbi初始化一个vmo
 pub fn run_userboot(zbi: impl AsRef<[u8]>, cmdline: &str) -> Arc<Process> {
 
-    let userboot = boot_library!("nebula_libuserboot.so"); //用userboot接收嵌入的userboot程序 Z报错！
+    let userboot = boot_library!("nebula_libuserboot.so"); //用userboot接收编译时嵌入的userboot.so 
 
 
-    let vdso = boot_library!("libzircon.so"); //用vdso接收嵌入的libzircon系统调用库
+    let vdso = boot_library!("libzircon.so"); //用vdso接收编译时嵌入的libzircon系统调用库，可能就是这里少了某些系统调用，才导致用户空间报错。
 
 
-    let job = Job::root(); //创建根任务  Z报错！页面错误
+    let job = Job::root(); //创建根任务  
     
 
-    let proc = Process::create(&job, "userboot").unwrap();//创建userboot进程
+    let proc = Process::create(&job, "userboot").unwrap();//在根job下创建userboot进程
     
 
     let thread = Thread::create(&proc, "userboot").unwrap();//创建userboot线程
@@ -127,8 +127,8 @@ pub fn run_userboot(zbi: impl AsRef<[u8]>, cmdline: &str) -> Arc<Process> {
     let resource = Resource::create( //分配资源
         "root",
         ResourceKind::ROOT,
-        0,
-        0x1_0000_0000,
+        0,                  //从0开始的4GB，就是这个resource管理的物理内存范围。包含了内核代码，说不定还有设备信息等东西。
+        0x1_0000_0000,  //资源占用的内存空间大小  0x1_0000_0000（4GB）。
         ResourceFlags::empty(),
     );
     
@@ -136,15 +136,16 @@ pub fn run_userboot(zbi: impl AsRef<[u8]>, cmdline: &str) -> Arc<Process> {
     let vmar = proc.vmar(); //初始化进程的虚拟地址区域
     
 
-    // 用elf加载器把userboot程序加载到内存，并用entry记录程序入口点的虚拟地址，userboot_size记录大小。
+    // 用elf加载器把编译时嵌入到内核中的userboot.so加载到userboot这个用户进程的虚拟内存空间里，
+    // 并用entry记录程序入口点的虚拟地址，userboot_size记录大小。
     let (entry, userboot_size) = {
-        let elf = ElfFile::new(userboot).unwrap(); //解析userboot的elf文件
+        let elf = ElfFile::new(userboot).unwrap(); //解析userboot.so（因为so文件也算elf文件）
         let size = elf.load_segment_size();//获取所有加载段的总大小。
         //为即将加载的userboot程序分配足够的虚拟内存区，none表示分配的起始位置由系统来定
         let vmar = vmar
             .allocate(None, size, VmarFlags::CAN_MAP_RXW, PAGE_SIZE)
             .unwrap();
-        //为所有可加载段创建vmo,并把他们map到vmar中
+        //为所有可加载段创建vmo,并把他们映射到程序的虚拟内存空间中
         vmar.load_from_elf(&elf).unwrap();
         //虚拟内存区的起始地址+elf程序中的入口点的偏移量，得到程序入口点的虚拟地址，再返回userboot的size
         (vmar.addr() + elf.header.pt2.entry_point() as usize, size)
@@ -222,6 +223,7 @@ pub fn run_userboot(zbi: impl AsRef<[u8]>, cmdline: &str) -> Arc<Process> {
     // channel
     //创建一个新的Channel。这个通道允许用户空间和内核空间之间的通信。
     let (user_channel, kernel_channel) = Channel::create();
+
     //创建一个handle,其拥有对user_channel的默认权限
     let handle = Handle::new(user_channel, Rights::DEFAULT_CHANNEL);
     // 创建一个动态大小的vector handles，初始化时包含 K_HANDLECOUNT 个引用了proc的Handle 对象
@@ -238,7 +240,7 @@ pub fn run_userboot(zbi: impl AsRef<[u8]>, cmdline: &str) -> Arc<Process> {
     handles[K_ZBI] = Handle::new(zbi_vmo, Rights::DEFAULT_VMO);
     
 
-    //接下来是将内核中vdsoa相关的数据，注入到作为参数传入的vdso文件里，制作得到完整的vdso
+    //接下来是将内核中vdso相关的数据，注入到作为参数传入的vdso文件里，制作得到完整的vdso
     // set up handles[K_FIRSTVDSO..K_LASTVDSO + 1]
     //从VDSO的起始地址向后偏移 0x4a50 字节处开始，接下来的 0x78 字节就是存储常量数据的区域
     const VDSO_DATA_CONSTANTS: usize = 0x4a50;
@@ -292,6 +294,7 @@ pub fn run_userboot(zbi: impl AsRef<[u8]>, cmdline: &str) -> Arc<Process> {
     let msg = MessagePacket { data, handles }; //把数据和句柄打包成数据包
     //用kernel_channel传递数据包到user_channel，在zCore中这个过程我记得是通过查询kernel_channel的peel找到user_channel，然后在user_channel的recv_queue中写入这个数据
     kernel_channel.write(msg).unwrap(); 
+
     //引用之前创建的thread,用proc来start一个实际的线程,从之前计算好的userboot程序的入口点entry开始执行，
     //并传递之前创建好的，引用了user_channel且拥有默认channel权限的handle，用来接受kernel_channel传递的数据。
     //这里的thread_fn是一个函数指针，（在 Rust 中，可以直接将函数名作为参数传入，实际上这就是函数指针的使用。）
@@ -320,14 +323,14 @@ fn thread_fn(thread: CurrentThread) -> Pin<Box<dyn Future<Output = ()> + Send + 
     Box::pin(run_user(thread))
 }
 
-///根据他的功能，推测其会在userboot之前运行，上下文设置，用户态切换，异常处理等工作由它来完成。
+///这个就是被打包的异步任务
 async fn run_user(thread: CurrentThread) {
     //利用当前线程的inner来设置CURRENT_THREAD这个TLS变量，提供了一个更灵活和统一的方式来管理和访问线程的上下文信息（如TID和PID）
     kernel_hal::thread::set_current_thread(Some(thread.inner()));
-    //如果当前线程是进程的第一个线程，处理 ProcessStarting 异常。这个操作是异步的，意味着线程在等待 handle_exception 完成时可以继续执行其他任务
+    //如果当前线程是进程的第一个线程，处理 ProcessStarting 异常。
     if thread.is_first_thread() {
         thread
-            .handle_exception(ExceptionType::ProcessStarting)
+            .handle_exception(ExceptionType::ProcessStarting) //这里会返回一个future
             .await;
     };
     //处理 ThreadStarting 异常
@@ -343,12 +346,12 @@ async fn run_user(thread: CurrentThread) {
         // run，线程被调度器选中后，准备真正执行用户态代码的阶段
         //这是一个调试信息，使用 trace! 宏来记录进入用户态代码执行的时刻。
         //ctx 是线程的上下文信息，包含寄存器状态等。这些信息被打印出来，便于后续调试和日志记录。
-        trace!("go to user: {:#x?}", ctx);
+        trace!("go to user: {:#x?}", ctx);  //修改，为了方便调试，在这里改成warn！（本来是trace！）
         //这是另一条调试信息，使用 debug! 宏记录线程切换的时刻。
         //thread.proc().name() 返回的是当前线程所属进程的名称。
         //thread.name() 返回的是当前线程的名称。
         //这条日志信息在系统中切换到某个线程执行时生成，便于跟踪哪个进程和线程在当前运行。
-        debug!("switch to {}|{}", thread.proc().name(), thread.name());
+        debug!("switch to {}|{}", thread.proc().name(), thread.name());  //修改，为了方便调试，在这里改成warn！（本来是debug！）
         let tmp_time = kernel_hal::timer::timer_now().as_nanos();
 
         // * Attention

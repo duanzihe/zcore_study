@@ -190,7 +190,7 @@ impl Process {
             inner.status = Status::Running;
             handle_value = arg1.map_or(INVALID_HANDLE, |handle| inner.add_handle(handle));
         }
-        thread.set_first_thread();
+        thread.set_first_thread();//将此线程设置为此进程的第一个线程。
         //设置线程的初始状态（如指令指针和栈指针），并开始在线程中执行程序
         let res = thread.start_with_entry(entry, stack, handle_value as usize, arg2, thread_fn);
         if res.is_err() && handle_value != INVALID_HANDLE {

@@ -44,7 +44,7 @@ fn primary_main(config: kernel_hal::KernelConfig) {
     kernel_hal::primary_init_early(config, &handler::ZcoreKernelHandler); 
     let options = utils::boot_options(); // 获取启动选项，包括cmdline,log_level和root_proc（在linux模式下就是/bin/busybox?sh）
     logging::set_max_level(&options.log_level); //根据启动选项设置日志级别。
-    info!("Boot options: {:#?}", options); //打印启动选项的详细信息。
+    warn!("Boot options: {:#?}", options); //打印启动选项的详细信息。
     memory::insert_regions(&kernel_hal::mem::free_pmem_regions());//将空闲的物理内存区域经过offset转换成空闲的虚拟地址区域， 然后注册到分配器。
 
     kernel_hal::primary_init();//执行进一步的初始化步骤，可能包括启动核心服务、设置中断处理程序等。

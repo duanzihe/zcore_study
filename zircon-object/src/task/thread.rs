@@ -282,7 +282,7 @@ impl Thread {
         let current = CurrentThread(self.clone());//CurrentThread 是一个用于包装当前线程的结构体，表示当前线程的上下文。
         // 获取thread_fn返回的future,表示这个任务在等待异步运行时的调度运行
         let future = thread_fn(current);
-        //从userboot的启动，一路追溯到了这里！在这里先用new将线程和一个future绑定在一起，作为threadSwitchFuture传递给spawn
+        //从userboot的启动，一路追溯到了这里！在这里把 线程和他要执行的Future 提交给内核的调度系统，准备让线程执行这个异步任务
         kernel_hal::thread::spawn(ThreadSwitchFuture::new(self.clone(), future));
         Ok(())
     }
@@ -579,9 +579,9 @@ impl CurrentThread {
             } else {
                 None
             };
-            if !type_.is_synth() {
+            if !type_.is_synth() { //如果异常类型不是合成异常（即 !type_.is_synth()），则从 inner.context 中获取异常上下文 cx。这可能是与硬件状态或线程状态相关的上下文。
                 error!(
-                    "User mode exception: {:?} {:#x?}",
+                    "User mode exception: {:?} {:#x?}",   //报错点！
                     type_,
                     cx.expect("Architectural exception should has context")
                 );

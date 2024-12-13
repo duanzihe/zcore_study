@@ -1016,6 +1016,7 @@ pub const KERNEL_ASPACE_SIZE: u64 = 0x0000_0080_0000_0000;
 pub const USER_ASPACE_BASE: u64 = 0;
 // pub const USER_ASPACE_BASE: u64 = 0x0000_0000_0100_0000;
 /// The size of user address space
+/// 用户空间的大小为 128 TB - 4 KB = 128 TB
 pub const USER_ASPACE_SIZE: u64 = (1u64 << 47) - 4096 - USER_ASPACE_BASE;
 /// The default number of user stack pages
 pub const USER_STACK_PAGES: usize = 128;

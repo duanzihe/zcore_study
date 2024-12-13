@@ -33,7 +33,7 @@ cfg_if! {
                     }
                 }
             };
-            info!("Opening the rootfs...");
+            warn!("Opening the rootfs...");
             rcore_fs_sfs::SimpleFileSystem::open(device).expect("failed to open device SimpleFS")
         }
     } else if #[cfg(feature = "zircon")] {
@@ -53,6 +53,7 @@ cfg_if! {
 
 #[cfg(not(feature = "libos"))]
 pub(crate) fn init_ram_disk() -> Option<&'static mut [u8]> {
+    //获取嵌入到内核中的zbi的起始和结束地址，并将其作为一个字节切片返回，供后续run_userboot使用
     if cfg!(feature = "link-user-img") {
         extern "C" {
             fn _user_img_start();
@@ -76,6 +77,7 @@ pub(crate) fn init_ram_disk() -> Option<&'static mut [u8]> {
 }
 
 // Hard link rootfs img
+// 这里在编译时就把link-user-img嵌入到内核空间新建的.data.img数据段中。
 #[cfg(not(feature = "libos"))]
 #[cfg(feature = "link-user-img")]
 core::arch::global_asm!(concat!(

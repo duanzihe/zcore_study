@@ -26,7 +26,7 @@ enum ExceptionateInner {
 }
 
 impl Exceptionate {
-    /// Create an `Exceptionate`.
+    /// 创建一个新exceptionate,指定channel类型，并设置其内部状态为init（表示尚未绑定channel）
     pub(super) fn new(type_: ExceptionChannelType) -> Arc<Self> {
         Arc::new(Exceptionate {
             type_,
